@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ಕನ್ನಡ ಕಲಿಯೋಣ (Kannada Kaliyona) - Enhanced</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Noto Sans Kannada', sans-serif;
+            user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
+            touch-action: manipulation;
+            background-color: #f7fafc; /* Lighter gray background */
+        }
+        button { min-height: 48px; min-width: 48px; }
+
+        /* Main Display Area */
+        #displayArea {
+            font-size: clamp(2.5rem, 12vw, 7rem); /* Adjusted for better sentence fit */
+            line-height: 1.3;
+            font-weight: bold;
+            text-align: center;
+            min-height: 250px; /* Slightly reduced min-height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            background-color: #ffffff; /* White background */
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0; /* Softer border */
+            color: #2d3748; /* Darker gray text */
+            margin-bottom: 1.5rem; /* Increased margin */
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Message & Recognition Boxes */
+        #messageBox, #recognizedText {
+            min-height: 55px; /* Increased height */
+            font-size: 1.1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            display: flex; /* Use flexbox for alignment */
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem; /* Space between icon and text */
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+        }
+
+        /* Button Styles */
+        .nav-button {
+            background-color: #4299e1; /* Tailwind Blue 500 */
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease, opacity 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: inline-flex; /* Align icon and text */
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-button:hover:not(:disabled) { background-color: #3182ce; } /* Blue 600 */
+        .nav-button:active:not(:disabled) { transform: scale(0.97); }
+        .nav-button:disabled { background-color: #a0aec0; cursor: not-allowed; opacity: 0.7; } /* Gray 500 */
+
+        .action-button { background-color: #48bb78; } /* Green 500 */
+        .action-button:hover:not(:disabled) { background-color: #38a169; } /* Green 600 */
+        .record-button { background-color: #f56565; } /* Red 500 */
+        .record-button:hover:not(:disabled) { background-color: #e53e3e; } /* Red 600 */
+        .record-button.recording { background-color: #ed8936; animation: pulse 1.5s infinite; } /* Orange 500 */
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(237, 137, 54, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(237, 137, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(237, 137, 54, 0); }
+        }
+
+        /* Lesson Title */
+        #lessonTitle {
+            font-size: 1.3rem; /* Slightly smaller */
+            font-weight: 600;
+            color: #5a67d8; /* Indigo 600 */
+            margin-bottom: 0.5rem; /* Reduced margin */
+            text-align: center;
+        }
+
+        /* Progress Bar */
+        #progressBarContainer {
+            width: 100%;
+            background-color: #e2e8f0; /* Gray 300 */
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            height: 1rem; /* Bar height */
+        }
+        #progressBar {
+            height: 100%;
+            width: 0%; /* Starts at 0 */
+            background-color: #68d391; /* Green 400 */
+            border-radius: 0.5rem;
+            transition: width 0.5s ease-in-out;
+            text-align: center;
+            color: white;
+            font-size: 0.75rem;
+            line-height: 1rem; /* Center text vertically */
+        }
+
+        /* Validation Styles */
+        .validation-correct {
+            background-color: #c6f6d5; /* Green 100 */
+            color: #2f855a; /* Green 700 */
+            border: 1px solid #9ae6b4; /* Green 300 */
+        }
+        .validation-incorrect {
+            background-color: #fed7d7; /* Red 100 */
+            color: #c53030; /* Red 700 */
+            border: 1px solid #feb2b2; /* Red 300 */
+        }
+         .validation-listening {
+            background-color: #feebc8; /* Orange 100 */
+            color: #9c4221; /* Orange 800 */
+            border: 1px solid #fbd38d; /* Orange 300 */
+        }
+         .validation-default {
+            background-color: #e2e8f0; /* Gray 300 */
+            color: #4a5568; /* Gray 700 */
+            border: 1px solid #cbd5e0; /* Gray 400 */
+         }
+         .message-info {
+             background-color: #bee3f8; /* Blue 100 */
+             color: #2b6cb0; /* Blue 700 */
+             border: 1px solid #90cdf4; /* Blue 300 */
+         }
+         .message-error {
+             background-color: #fed7d7; /* Red 100 */
+             color: #c53030; /* Red 700 */
+             border: 1px solid #feb2b2; /* Red 300 */
+         }
+
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-3xl mx-auto bg-white p-5 md:p-7 rounded-xl shadow-lg">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-700 mb-3">ಕನ್ನಡ ಕಲಿಯೋಣ</h1>
+
+        <div id="progressBarContainer" title="ನಿಮ್ಮ ಪ್ರಗತಿ (Your Progress)">
+            <div id="progressBar"></div>
+        </div>
+
+        <div id="lessonTitle">ಪಾಠದ ಶೀರ್ಷಿಕೆ</div>
+        <p class="text-center text-gray-500 mb-4 text-base">ಕೆಳಗಿನದನ್ನು ಓದಿ ಮತ್ತು 'ಹೇಳಿ' ಬಟನ್ ಒತ್ತಿರಿ</p>
+
+        <div id="displayArea"></div>
+
+        <div class="flex justify-between mt-5 mb-5">
+            <button id="prevButton" class="nav-button" title="ಹಿಂದಿನದು (Previous)">
+                <i class="fas fa-arrow-left"></i> ಹಿಂದಿನದು
+            </button>
+            <button id="nextButton" class="nav-button" title="ಮುಂದಿನದು (Next)">
+                ಮುಂದಿನದು <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-3 mt-4">
+            <button id="speakButton" class="nav-button action-button w-full sm:w-auto" title="ಕೇಳಿ (Listen)">
+                <i class="fas fa-volume-up"></i> ಕೇಳಿ
+            </button>
+            <button id="recordButton" class="nav-button record-button w-full sm:w-auto" title="ಹೇಳಿ (Speak)">
+                 <i class="fas fa-microphone"></i> ಹೇಳಿ
+            </button>
+        </div>
+
+        <div id="messageBox" class="mt-5 message-info">
+             <i class="fas fa-info-circle"></i> <span>ಪ್ರಾರಂಭಿಸಲು ಸಿದ್ಧ!</span>
+        </div>
+         <div id="recognizedText" class="mt-3 validation-default">
+             <i class="fas fa-comment-dots"></i> <span>ನೀವು ಹೇಳಿದ್ದು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ</span>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration & Content ---
+
+        // Function to shuffle an array (Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
+        }
+
+        // Define Lessons (Add more content here!)
+        // NOTE: Content below is expanded sample data. Please review and add more for full lessons.
+        const lessons = [
+            {
+                title: "ಪಾಠ 1: ಸರಳ ಪದಗಳು", // Simple Words
+                shuffle: true, // Randomize this lesson
+                content: [
+                    "ಮನೆ", "ನೀರು", "ಊಟ", "ಕೆಲಸ", "ಬಾ", "ಹೋಗು", "ಓದು", "ನೋಡು", "ಇದು", "ಅದು",
+                    "ಹಣ್ಣು", "ಹೂವು", "ಮರ", "ಗಿಡ", "ಬೀದಿ", "ದಾರ", "ಬಟ್ಟೆ", "ಚಹಾ", "ಕಾಫಿ", "ಹಾಲು",
+                    "ಮೊಸರು", "ಅಕ್ಕಿ", "ಬೇಳೆ", "ತರಕಾರಿ", "ಗಾಳಿ", "ಬೆಳಕು", "ಸೂರ್ಯ", "ಚಂದ್ರ", "ದಿನ", "ರಾತ್ರಿ",
+                    "ಬೆಳಿಗ್ಗೆ", "ಸಂಜೆ", "ಮಧ್ಯಾಹ್ನ", "ಹಣ", "ಅಂಗಡಿ", "ದಾರಿ", "ಊರು", "ದೇಶ", "ಶಾಲೆ", "ಕಾಲೇಜು",
+                    "ಆಟ", "ಪಾಠ", "ಹಾಡು", "ಮಾತು", "ನಗು", "ಅಳು", "ನಿದ್ದೆ", "ಎಚ್ಚರ", "ಸ್ವಲ್ಪ", "ತುಂಬಾ",
+                    "ದೊಡ್ಡ", "ಚಿಕ್ಕ", "ಒಳ್ಳೆಯ", "ಕೆಟ್ಟ", "ಹೊಸ", "ಹಳೆಯ", "ಸುಲಭ", "ಕಷ್ಟ", "ಬೇಗ", "ನಿಧಾನ",
+                    "ಇಲ್ಲಿ", "ಅಲ್ಲಿ", "ಹತ್ತಿರ", "ದೂರ", "ಮೇಲೆ", "ಕೆಳಗೆ", "ಒಳಗೆ", "ಹೊರಗೆ", "ಮುಂದೆ", "ಹಿಂದೆ",
+                    "ಯಾರು", "ಏನು", "ಯಾವಾಗ", "ಎಲ್ಲಿ", "ಹೇಗೆ", "ಏಕೆ", "ನಾನು", "ನೀನು", "ಅವನು", "ಅವಳು",
+                    "ಅದು", "ನಾವು", "ನೀವು", "ಅವರು", "ಇವರು", "ಅಮ್ಮ", "ಅಪ್ಪ", "ಅಣ್ಣ", "ತಮ್ಮ", "ಅಕ್ಕ",
+                    "ತಂಗಿ", "ಗೆಳೆಯ", "ಗೆಳತಿ", "ಮಗು", "ದೇವರು", "ಪುಸ್ತಕ", "ಪೆನ್ನು", "ಬಣ್ಣ", "ಸರಿ", "ತಪ್ಪು" // 100 words
+                ]
+            },
+            {
+                title: "ಪಾಠ 2: ಎರಡು ಪದಗಳ ವಾಕ್ಯಗಳು", // Two Word Sentences
+                shuffle: true, // Randomize this lesson
+                content: [
+                    "ಇದು ಮನೆ.", "ನೀರು ಕುಡಿ.", "ಮನೆಗೆ ಬಾ.", "ಅವನು ಬಂದನು.", "ಅವಳು ಹೋದಳು.", "ಕೆಲಸ ಮಾಡು.", "ಪುಸ್ತಕ ಓದು.", "ಚೆನ್ನಾಗಿ ನಗು.", "ಬೇಗ ಬಾ.", "ನಿಧಾನ ಹೋಗು.",
+                    "ಹಣ್ಣು ತಿನ್ನು.", "ಹೂವು ನೋಡು.", "ಮರ ಹತ್ತು.", "ಗಿಡ ನೆಡು.", "ಬೀದಿ ದಾಟು.", "ದಾರ ಹಿಡಿ.", "ಬಟ್ಟೆ ಹಾಕು.", "ಚಹಾ ಕುಡಿ.", "ಕಾಫಿ ಬೇಡ.", "ಹಾಲು ಕೊಡು.",
+                    "ಮೊಸರು ಬೇಕು.", "ಅಕ್ಕಿ ತೊಳಿ.", "ಬೇಳೆ ಬೇಯಿಸು.", "ತರಕಾರಿ ಕತ್ತರಿಸು.", "ಗಾಳಿ ಬೀಸಿತು.", "ಬೆಳಕು ಬಂತು.", "ಸೂರ್ಯ ಮೂಡಿದನು.", "ಚಂದ್ರ ಕಾಣಿಸಿದನು.", "ದಿನ ಕಳೆಯಿತು.", "ರಾತ್ರಿ ಆಯಿತು.",
+                    "ಬೆಳಿಗ್ಗೆ ಏಳು.", "ಸಂಜೆ ಬಾ.", "ಮಧ್ಯಾಹ್ನ ಊಟ.", "ಹಣ ಕೊಡು.", "ಅಂಗಡಿ ತೆರೆದಿದೆ.", "ದಾರಿ ತೋರಿಸು.", "ಊರು ತಲುಪಿದೆ.", "ದೇಶ ಚೆನ್ನಾಗಿದೆ.", "ಶಾಲೆ ಮುಗಿಯಿತು.", "ಕಾಲೇಜು ಆರಂಭ.",
+                    "ಆಟ ಆಡು.", "ಪಾಠ ಕಲಿ.", "ಹಾಡು ಹೇಳು.", "ಮಾತು ಕೇಳು.", "ನಗು ನಿಲ್ಲಿಸು.", "ಅಳು ನಿಲ್ಲಿಸು.", "ನಿದ್ದೆ ಮಾಡು.", "ಎಚ್ಚರ ಇರು.", "ಸ್ವಲ್ಪ ಕೊಡು.", "ತುಂಬಾ ತಿನ್ನು.",
+                    "ದೊಡ್ಡ ಮನೆ.", "ಚಿಕ್ಕ ಮಗು.", "ಒಳ್ಳೆಯ ಹುಡುಗ.", "ಕೆಟ್ಟ ಕನಸು.", "ಹೊಸ ಬಟ್ಟೆ.", "ಹಳೆಯ ನೆನಪು.", "ಸುಲಭ ಪ್ರಶ್ನೆ.", "ಕಷ್ಟ ಕೆಲಸ.", "ಬೇಗ ಬಾ.", "ನಿಧಾನ ಹೋಗು.",
+                    "ಇಲ್ಲಿ ಇಡು.", "ಅಲ್ಲಿ ನೋಡು.", "ಹತ್ತಿರ ಬಾ.", "ದೂರ ಹೋಗು.", "ಮೇಲೆ ನೋಡು.", "ಕೆಳಗೆ ಇಳಿಸು.", "ಒಳಗೆ ಬಾ.", "ಹೊರಗೆ ಹೋಗು.", "ಮುಂದೆ ಸರಿ.", "ಹಿಂದೆ ನೋಡು.",
+                    "ಯಾರು ಬಂದರು?", "ಏನು ಬೇಕು?", "ಯಾವಾಗ ಬರುವೆ?", "ಎಲ್ಲಿ ಹೋದೆ?", "ಹೇಗೆ ಮಾಡಿದೆ?", "ಏಕೆ ಕೇಳಿದೆ?", "ನಾನು ಬಂದೆ.", "ನೀನು ಹೋಗು.", "ಅವನು ನೋಡಿದನು.", "ಅವಳು ಕೇಳಿದಳು.",
+                    "ಅದು ಹಾರಿತು.", "ನಾವು ಗೆದ್ದೆವು.", "ನೀವು ಸೋತರು.", "ಅವರು ಬಂದರು.", "ಇವರು ಯಾರು?", "ಅಮ್ಮ ಕರೆದರು.", "ಅಪ್ಪ ಹೇಳಿದರು.", "ಅಣ್ಣ ನೋಡಿದನು.", "ತಮ್ಮ ಆಡಿದನು.", "ಅಕ್ಕ ಓದಿದಳು.",
+                    "ತಂಗಿ ಮಲಗಿದಳು.", "ಗೆಳೆಯ ಬಂದನು.", "ಗೆಳತಿ ಹೋದಳು.", "ಮಗು ಅಳುತ್ತಿದೆ.", "ದೇವರು ಇದ್ದಾನೆ.", "ಪುಸ್ತಕ ಕೊಡು.", "ಪೆನ್ನು ತಗೋ.", "ಬಣ್ಣ ಹಚ್ಚು.", "ಸರಿ ಹೇಳು.", "ತಪ್ಪು ಮಾಡಬೇಡ." // 100 sentences
+                ]
+            },
+            {
+                title: "ಪಾಠ 3: ಮೂರು ಪದಗಳ ವಾಕ್ಯಗಳು", // Three Word Sentences
+                shuffle: true, // Randomize this lesson
+                content: [
+                    "ನಾನು ನೀರು ಕುಡಿದೆ.", "ಅವಳು ಶಾಲೆಗೆ ಹೋದಳು.", "ಇದು ದೊಡ್ಡ ಮನೆ.", "ಅವನು ಚೆನ್ನಾಗಿ ಓದುತ್ತಾನೆ.", "ನಾವು ನಾಳೆ ಬರುತ್ತೇವೆ.", "ದಯವಿಟ್ಟು ಇಲ್ಲಿ ಬಾ.", "ಅವನು ಕೆಲಸ ಮಾಡುತ್ತಾನೆ.", "ಅವಳು ಹಾಡು ಹೇಳುತ್ತಾಳೆ.", "ಮಗು ಚೆನ್ನಾಗಿ ನಗುತ್ತದೆ.", "ನಾವು ಆಟ ಆಡುತ್ತೇವೆ.",
+                    "ನಾನು ಹಣ್ಣು ತಿಂದೆನು.", "ಅವಳು ಹೂವು ನೋಡಿದಳು.", "ಅವನು ಮರ ಹತ್ತಿದನು.", "ನಾವು ಗಿಡ ನೆಟ್ಟೆವು.", "ನೀನು ಬೀದಿ ದಾಟು.", "ಅವಳು ದಾರ ಹಿಡಿದಳು.", "ನಾನು ಬಟ್ಟೆ ಹಾಕಿದೆನು.", "ಅವನು ಚಹಾ ಕುಡಿದನು.", "ಅವಳಿಗೆ ಕಾಫಿ ಬೇಡ.", "ಅಮ್ಮ ಹಾಲು ಕೊಟ್ಟರು.",
+                    "ನನಗೆ ಮೊಸರು ಬೇಕು.", "ಅವಳು ಅಕ್ಕಿ ತೊಳೆದಳು.", "ಅಪ್ಪ ಬೇಳೆ ತಂದರು.", "ಅಮ್ಮ ತರಕಾರಿ ಹೆಚ್ಚಿದರು.", "ತಣ್ಣನೆ ಗಾಳಿ ಬೀಸಿತು.", "ಪ್ರಕಾಶಮಾನ ಬೆಳಕು ಬಂತು.", "ಸೂರ್ಯ ಪೂರ್ವದಲ್ಲಿ ಮೂಡಿದನು.", "ಚಂದ್ರ ಆಕಾಶದಲ್ಲಿ ಕಾಣಿಸಿದನು.", "ದಿನ ಬೇಗ ಕಳೆಯಿತು.", "ರಾತ್ರಿ ನಿಧಾನವಾಗಿ ಆಯಿತು.",
+                    "ನಾನು ಬೆಳಿಗ್ಗೆ ಬೇಗ ಎದ್ದೆ.", "ನೀನು ಸಂಜೆ ಮನೆಗೆ ಬಾ.", "ನಾವು ಮಧ್ಯಾಹ್ನ ಊಟ ಮಾಡಿದೆವು.", "ಅವನು ನನಗೆ ಹಣ ಕೊಟ್ಟನು.", "ಅಂಗಡಿ ಈಗ ತೆರೆದಿದೆ.", "ಅವಳು ದಾರಿ ತೋರಿಸಿದಳು.", "ನಾನು ಊರು ತಲುಪಿದೆನು.", "ನಮ್ಮ ದೇಶ ಸುಂದರವಾಗಿದೆ.", "ಶಾಲೆ ನಾಳೆ ರಜೆ.", "ಕಾಲೇಜು ಸೋಮವಾರ ಆರಂಭ.",
+                    "ಮಕ್ಕಳು ಆಟ ಆಡುತ್ತಾರೆ.", "ವಿದ್ಯಾರ್ಥಿಗಳು ಪಾಠ ಕಲಿಯುತ್ತಾರೆ.", "ಗಾಯಕಿ ಹಾಡು ಹೇಳುತ್ತಾಳೆ.", "ಹಿರಿಯರು ಮಾತು ಹೇಳುತ್ತಾರೆ.", "ಅವಳು ಜೋರಾಗಿ ನಕ್ಕಳು.", "ಮಗು ತುಂಬಾ ಅಳುತ್ತಿದೆ.", "ಅವನು ಗಾಢ ನಿದ್ದೆ ಮಾಡಿದನು.", "ನಾನು ಈಗ ಎಚ್ಚರವಾದೆ.", "ನನಗೆ ಸ್ವಲ್ಪ ನೀರು ಕೊಡು.", "ಅವನು ತುಂಬಾ ಊಟ ಮಾಡಿದನು.",
+                    "ಇದು ತುಂಬಾ ದೊಡ್ಡ ಮನೆ.", "ಅವಳು ಚಿಕ್ಕ ಮಗು ಅಲ್ಲ.", "ಅವನು ಒಳ್ಳೆಯ ಹುಡುಗ ಹೌದು.", "ನಾನು ಕೆಟ್ಟ ಕನಸು ಕಂಡೆ.", "ಇವು ಹೊಸ ಬಟ್ಟೆಗಳು.", "ಅದು ಹಳೆಯ ನೆನಪು ಮಾತ್ರ.", "ಈ ಪ್ರಶ್ನೆ ಸುಲಭವಾಗಿದೆ.", "ಆ ಕೆಲಸ ಕಷ್ಟಕರವಾಗಿದೆ.", "ನೀನು ಬೇಗ ಬರಬೇಕು.", "ಅವನು ನಿಧಾನವಾಗಿ ಹೋದನು.",
+                    "ಪುಸ್ತಕವನ್ನು ಇಲ್ಲಿ ಇಡು.", "ಆ ಚಿತ್ರವನ್ನು ಅಲ್ಲಿ ನೋಡು.", "ನನ್ನ ಹತ್ತಿರ ಬಾ.", "ಅವನಿಂದ ದೂರ ಹೋಗು.", "ಆಕಾಶದ ಮೇಲೆ ನೋಡು.", "ಮರದಿಂದ ಕೆಳಗೆ ಇಳಿಸು.", "ಮನೆಯ ಒಳಗೆ ಬಾ.", "ಶಾಲೆಯ ಹೊರಗೆ ಹೋಗು.", "ಸಾಲಿನಲ್ಲಿ ಮುಂದೆ ಸರಿ.", "ಕನ್ನಡಿಯ ಹಿಂದೆ ನೋಡು.",
+                    "ನಿನ್ನೆ ಯಾರು ಬಂದರು?", "ನಿನಗೆ ಏನು ಬೇಕು?", "ನೀನು ಯಾವಾಗ ಬರುವೆ?", "ಅವನು ಎಲ್ಲಿಗೆ ಹೋದನು?", "ಇದನ್ನು ಹೇಗೆ ಮಾಡಿದೆ?", "ನೀನು ಏಕೆ ಕೇಳಿದೆ?", "ನಾನು ನಿನ್ನೆ ಬಂದೆ.", "ನೀನು ನಾಳೆ ಹೋಗು.", "ಅವನು ಸಿನಿಮಾ ನೋಡಿದನು.", "ಅವಳು ಹಾಡು ಕೇಳಿದಳು.",
+                    "ಆ ಹಕ್ಕಿ ಹಾರಿತು.", "ನಾವು ಪಂದ್ಯ ಗೆದ್ದೆವು.", "ನೀವು ಏಕೆ ಸೋತರು?", "ಅವರು ನಾಟಕ ನೋಡಿದರು.", "ಇವರು ನನ್ನ ಸ್ನೇಹಿತರು.", "ಅಮ್ಮ ಅಡುಗೆ ಮಾಡಿದರು.", "ಅಪ್ಪ ಪೇಪರ್ ಓದಿದರು.", "ಅಣ್ಣ ಕ್ರಿಕೆಟ್ ಆಡಿದನು.", "ತಮ್ಮ ಶಾಲೆಗೆ ಹೋದನು.", "ಅಕ್ಕ ಚಿತ್ರ ಬರೆದಳು.",
+                    "ತಂಗಿ ಗೊಂಬೆ ಆಡಿದಳು.", "ನನ್ನ ಗೆಳೆಯ ಬಂದನು.", "ಅವಳ ಗೆಳತಿ ಹೋದಳು.", "ಆ ಮಗು ಅಳುತ್ತಿದೆ.", "ದೇವರು ಎಲ್ಲೆಡೆ ಇದ್ದಾನೆ.", "ನಾನು ಪುಸ್ತಕ ಓದಿದೆನು.", "ಅವನು ಪೆನ್ನು ತಂದನು.", "ಅವಳು ಬಣ್ಣ ಹಚ್ಚಿದಳು.", "ನೀನು ಸರಿ ಹೇಳಿದೆ.", "ಅವನು ತಪ್ಪು ಮಾಡಲಿಲ್ಲ." // 100 sentences
+                ]
+            },
+            {
+                title: "ಪಾಠ 4: ದೊಡ್ಡ ವಾಕ್ಯಗಳು", // Longer Sentences
+                shuffle: false, // Keep longer sentences in order
+                content: [
+                    "ನಾನು ನಾಳೆ ಬೆಂಗಳೂರಿಗೆ ಹೋಗುತ್ತೇನೆ.",
+                    "ಅವಳು ನಿನ್ನೆ ಅಂಗಡಿಯಿಂದ ಹಣ್ಣು ತಂದಳು.",
+                    "ಈ ಪುಸ್ತಕವನ್ನು ದಯವಿಟ್ಟು ನನಗೆ ಕೊಡಿ.",
+                    "ನಾವು ಇಂದು ಸಂಜೆ ಸಿನಿಮಾ ನೋಡುತ್ತೇವೆ.",
+                    "ಮಕ್ಕಳು ಆಟದ ಮೈದಾನದಲ್ಲಿ ಆಡುತ್ತಿದ್ದಾರೆ.",
+                    "ಅವನು ಪ್ರತಿದಿನ ಬೆಳಿಗ್ಗೆ ಬೇಗ ಏಳುತ್ತಾನೆ.",
+                    "ಅವಳು ಕನ್ನಡವನ್ನು ಚೆನ್ನಾಗಿ ಮಾತನಾಡುತ್ತಾಳೆ.",
+                    "ನಾವು ಮುಂದಿನ ವಾರ ಪ್ರವಾಸ ಹೋಗುತ್ತೇವೆ.",
+                    "ದಯವಿಟ್ಟು ಬಾಗಿಲನ್ನು ಮುಚ್ಚಿ ಒಳಗೆ ಬನ್ನಿ.",
+                    "ಈ ಊಟ ತುಂಬಾ ರುಚಿಕರವಾಗಿ ಇದೆ.",
+                    // Add ~90 more longer sentences here
+                    "ಮಳೆ ಬಂದ ಕಾರಣ ನಾವು ಮನೆಯಲ್ಲೇ ಉಳಿದೆವು.",
+                    "ಅವನು ತನ್ನ ಸ್ನೇಹಿತನ ಜೊತೆ ಆಸ್ಪತ್ರೆಗೆ ಹೋದನು.",
+                    "ನಾವು ಬಸ್ಸಿನಲ್ಲಿ ಪ್ರಯಾಣ ಮಾಡಿ ದೇವಸ್ಥಾನ ತಲುಪಿದೆವು.",
+                    "ಈ ಕಥೆಯನ್ನು ನಾನು ಚಿಕ್ಕವನಿದ್ದಾಗ ಕೇಳಿದ್ದೆ.",
+                    "ಪರೀಕ್ಷೆಯಲ್ಲಿ ಒಳ್ಳೆಯ ಅಂಕಗಳನ್ನು ಪಡೆಯಲು ಚೆನ್ನಾಗಿ ಓದಬೇಕು."
+                ]
+            }
+        ];
+
+        // --- Global State ---
+        let currentContentIndex = 0;
+        let courseContent = []; // Will be populated after shuffling
+        let synth = window.speechSynthesis;
+        let recognition;
+        let isRecording = false;
+        let isCurrentItemCorrect = false; // Track if current item is validated
+
+        // --- DOM Elements ---
+        const displayArea = document.getElementById('displayArea');
+        const lessonTitleElement = document.getElementById('lessonTitle');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const speakButton = document.getElementById('speakButton');
+        const recordButton = document.getElementById('recordButton');
+        const messageBox = document.getElementById('messageBox');
+        const messageBoxIcon = messageBox.querySelector('i');
+        const messageBoxText = messageBox.querySelector('span');
+        const recognizedTextElement = document.getElementById('recognizedText');
+        const recognizedTextIcon = recognizedTextElement.querySelector('i');
+        const recognizedTextSpan = recognizedTextElement.querySelector('span');
+        const progressBar = document.getElementById('progressBar');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+
+
+        // --- Core Functions ---
+
+        // Prepare course content (shuffle lessons if needed)
+        function prepareCourseContent() {
+            courseContent = []; // Reset
+            lessons.forEach((lesson) => {
+                let contentToAdd = lesson.content;
+                // Shuffle content if the lesson requires it
+                if (lesson.shuffle) {
+                    contentToAdd = shuffleArray([...lesson.content]); // Shuffle a copy
+                }
+                // Add lesson info to each item
+                contentToAdd.forEach((item, itemIndex) => {
+                    courseContent.push({
+                        text: item,
+                        lessonTitle: lesson.title,
+                        isFirstItemOfLesson: itemIndex === 0 // Mark the first item
+                    });
+                });
+            });
+            console.log(`Prepared ${courseContent.length} items.`);
+        }
+
+        // Update the display, progress, and buttons
+        function updateDisplay() {
+            if (courseContent.length === 0) return; // Do nothing if no content
+
+            const currentItem = courseContent[currentContentIndex];
+            displayArea.textContent = currentItem.text;
+            lessonTitleElement.textContent = currentItem.lessonTitle;
+
+            // Reset validation state for the new item
+            isCurrentItemCorrect = false;
+            resetValidationUI(); // Reset feedback area
+
+            updateNavButtons();
+            updateProgressBar();
+
+            // Optional: Announce new lesson start
+            if (currentItem.isFirstItemOfLesson && currentContentIndex > 0) {
+                 showMessage(`ಹೊಸ ಪಾಠ ಪ್ರಾರಂಭ: ${currentItem.lessonTitle}`, 'info');
+            } else if (currentContentIndex === 0 && currentItem.isFirstItemOfLesson) {
+                 showMessage(`ಪಾಠ ಪ್ರಾರಂಭ: ${currentItem.lessonTitle}`, 'info');
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = courseContent.length > 0 ? ((currentContentIndex + 1) / courseContent.length) * 100 : 0;
+            progressBar.style.width = `${progress}%`;
+            // Optional: Add text inside the bar
+            // progressBar.textContent = `${Math.round(progress)}%`;
+            progressBarContainer.title = `ನಿಮ್ಮ ಪ್ರಗತಿ: ${currentContentIndex + 1} / ${courseContent.length}`;
+        }
+
+
+        // Update Previous/Next button states
+        function updateNavButtons() {
+            prevButton.disabled = currentContentIndex === 0;
+            // NEXT button is disabled if it's the last item OR if the current item is NOT validated yet
+            nextButton.disabled = (currentContentIndex === courseContent.length - 1) || !isCurrentItemCorrect;
+
+            // Visual cues for disabled state are handled by CSS ':disabled' pseudo-class
+        }
+
+        // Speak the current text
+        function speakText(text) {
+            // Basic implementation (same as before, ensure voices loaded)
+            if (synth.speaking) { synth.cancel(); setTimeout(() => speakText(text), 100); return; }
+            if (text === '') return;
+
+            let voices = synth.getVoices();
+            let kannadaVoice = voices.find(voice => voice.lang === 'kn-IN') || voices.find(voice => voice.lang.startsWith('kn')) || voices.find(voice => voice.lang === 'hi-IN') || voices.find(voice => voice.default);
+
+            if (!kannadaVoice) { showMessage("ಯಾವುದೇ ಸೂಕ್ತ ಧ್ವನಿ ಲಭ್ಯವಿಲ್ಲ.", 'error'); return; }
+
+            const utterThis = new SpeechSynthesisUtterance(text);
+            utterThis.voice = kannadaVoice;
+            utterThis.lang = kannadaVoice.lang;
+            utterThis.pitch = 1;
+            utterThis.rate = 0.85;
+
+            utterThis.onstart = () => { speakButton.disabled = true; };
+            utterThis.onend = () => { speakButton.disabled = false; };
+            utterThis.onerror = (event) => {
+                console.error('SpeechSynthesis Error:', event);
+                showMessage(`ಧ್ವನಿ ದೋಷ: ${event.error}`, 'error');
+                speakButton.disabled = false;
+            };
+            synth.speak(utterThis);
+        }
+
+        // Show messages (info or error)
+        function showMessage(message, type = 'info') { // type can be 'info' or 'error'
+            messageBoxText.textContent = message;
+            if (type === 'error') {
+                messageBox.className = 'mt-5 message-error';
+                messageBoxIcon.className = 'fas fa-exclamation-circle';
+            } else {
+                messageBox.className = 'mt-5 message-info';
+                messageBoxIcon.className = 'fas fa-info-circle';
+            }
+        }
+
+        // Update the validation feedback area
+        function updateValidationUI(status, message) {
+            recognizedTextSpan.textContent = message;
+            switch (status) {
+                case 'correct':
+                    recognizedTextElement.className = 'mt-3 validation-correct';
+                    recognizedTextIcon.className = 'fas fa-check-circle';
+                    break;
+                case 'incorrect':
+                    recognizedTextElement.className = 'mt-3 validation-incorrect';
+                    recognizedTextIcon.className = 'fas fa-times-circle';
+                    break;
+                case 'listening':
+                    recognizedTextElement.className = 'mt-3 validation-listening';
+                    recognizedTextIcon.className = 'fas fa-microphone-alt animate-pulse'; // Pulse icon while listening
+                    break;
+                case 'processing':
+                     recognizedTextElement.className = 'mt-3 validation-listening'; // Use listening style for processing
+                     recognizedTextIcon.className = 'fas fa-spinner fa-spin'; // Spinning icon
+                     break;
+                default: // 'default' or error
+                    recognizedTextElement.className = 'mt-3 validation-default';
+                    recognizedTextIcon.className = 'fas fa-comment-dots';
+            }
+        }
+
+        // Reset validation UI to default state
+        function resetValidationUI() {
+             updateValidationUI('default', 'ನೀವು ಹೇಳಿದ್ದು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ');
+        }
+
+
+         // Initialize Speech Recognition
+        function initializeSpeechRecognition() {
+            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!window.SpeechRecognition) {
+                showMessage("ಕ್ಷಮಿಸಿ, ಧ್ವನಿ ಗುರುತಿಸುವಿಕೆ ಬೆಂಬಲಿಸುವುದಿಲ್ಲ.", 'error');
+                recordButton.disabled = true;
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.lang = 'kn-IN';
+            recognition.interimResults = false; // Final results only
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                recordButton.classList.add('recording');
+                recordButton.innerHTML = `<i class="fas fa-stop-circle"></i> ನಿಲ್ಲಿಸಿ`; // Change to Stop icon
+                updateValidationUI('listening', 'ಕೇಳಿಸಲಾಗುತ್ತಿದೆ...');
+            };
+
+            recognition.onresult = (event) => {
+                updateValidationUI('processing', 'ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...'); // Show processing state
+                const speechResult = event.results[0][0].transcript.trim();
+                const confidence = event.results[0][0].confidence;
+                console.log(`Recognition: "${speechResult}" (Confidence: ${confidence.toFixed(2)})`);
+
+                // --- Validation Logic ---
+                const currentTargetText = courseContent[currentContentIndex].text;
+                // Normalize: remove punctuation, extra spaces, convert to lower case (optional but can help)
+                const normalize = (str) => str.replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+                // Use a short delay before showing result for better UX
+                setTimeout(() => {
+                    if (normalize(speechResult) === normalize(currentTargetText)) {
+                        isCurrentItemCorrect = true; // Validation successful!
+                        updateValidationUI('correct', `ಸರಿಯಾಗಿದೆ! "${speechResult}"`);
+                        updateNavButtons(); // Enable Next button
+                        showMessage("ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'info');
+                    } else {
+                        isCurrentItemCorrect = false; // Validation failed
+                        updateValidationUI('incorrect', `ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ. ಕೇಳಿಸಿದ್ದು: "${speechResult}"`);
+                        // Keep Next button disabled (updateNavButtons() not needed here as isCurrentItemCorrect is false)
+                        showMessage(`ಸರಿಯಾದದ್ದು: "${currentTargetText}". ದಯವಿಟ್ಟು ಮತ್ತೆ 'ಹೇಳಿ' ಬಟನ್ ಒತ್ತಿರಿ.`, 'error');
+                    }
+                }, 300); // 300ms delay
+            };
+
+            recognition.onspeechend = () => {
+                // Speech ended, but recognition might still be processing.
+                // We stop the recording UI slightly later in onend or onerror.
+                 if (isRecording) {
+                     updateValidationUI('processing', 'ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...');
+                 }
+            };
+
+            recognition.onnomatch = () => {
+                 updateValidationUI('incorrect', "ಸ್ಪಷ್ಟವಾಗಿ ಕೇಳಿಸಲಿಲ್ಲ.");
+                 showMessage("ಕ್ಷಮಿಸಿ, ನನಗೆ ಅರ್ಥವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.", 'error');
+                 stopRecording(); // Ensure UI reset
+            };
+
+            recognition.onerror = (event) => {
+                console.error('SpeechRecognition error:', event.error);
+                let errorMsg = "ಧ್ವನಿ ದೋಷ: ";
+                 switch (event.error) {
+                    case 'no-speech': errorMsg += "ಮಾತು ಕೇಳಿಸಲಿಲ್ಲ."; break;
+                    case 'audio-capture': errorMsg += "ಮೈಕ್ರೊಫೋನ್ ಸಮಸ್ಯೆ."; break;
+                    case 'not-allowed': errorMsg += "ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ಬೇಕು."; break;
+                    default: errorMsg += event.error;
+                }
+                updateValidationUI('default', `ದೋಷ: ${event.error}`); // Show error in validation area too
+                showMessage(errorMsg, 'error');
+                stopRecording(); // Ensure UI reset
+            };
+
+            recognition.onend = () => {
+                 // Called after result, error, or stop()
+                 stopRecording(); // Ensure UI is always reset cleanly
+            };
+        }
+
+        // Start recording
+        function startRecording() {
+             if (!recognition || isRecording) return;
+             if (synth.speaking) { synth.cancel(); } // Stop speech synthesis if active
+
+             // Check/Request microphone permission before starting
+             navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                     stream.getTracks().forEach(track => track.stop()); // Got permission, stop the track.
+                     try {
+                         recognition.start(); // Start the actual recognition
+                     } catch (e) {
+                         console.error("Error starting recognition:", e);
+                         showMessage("ರೆಕಾರ್ಡಿಂಗ್ ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.", 'error');
+                         stopRecording();
+                     }
+                })
+                .catch(err => {
+                    console.error("Mic permission error:", err);
+                    showMessage("ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ಅಗತ್ಯವಿದೆ.", 'error');
+                    updateValidationUI('default', 'ಮೈಕ್ ಅನುಮತಿ ನೀಡಿಲ್ಲ');
+                    stopRecording(); // Ensure UI is reset
+                });
+        }
+
+        // Stop recording and reset UI
+         function stopRecording() {
+            if (recognition && isRecording) {
+                 recognition.stop(); // Stop the engine
+            }
+            isRecording = false;
+            recordButton.classList.remove('recording');
+            recordButton.innerHTML = `<i class="fas fa-microphone"></i> ಹೇಳಿ`; // Reset button
+            // Don't reset validation UI here, it's handled by onresult/onerror/onnomatch
+            // Only reset if it was stuck in 'listening' or 'processing' without a result/error
+             const currentStatus = recognizedTextElement.className;
+             if (currentStatus.includes('validation-listening') || currentStatus.includes('fa-spinner')) {
+                 resetValidationUI();
+             }
+        }
+
+        // --- Event Listeners ---
+        prevButton.addEventListener('click', () => {
+            if (currentContentIndex > 0) {
+                currentContentIndex--;
+                if (synth.speaking) synth.cancel();
+                if (isRecording) stopRecording();
+                updateDisplay();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            // Should only be clickable if isCurrentItemCorrect is true (enforced by disabled state)
+            if (currentContentIndex < courseContent.length - 1) {
+                currentContentIndex++;
+                 if (synth.speaking) synth.cancel();
+                 if (isRecording) stopRecording();
+                updateDisplay();
+            } else {
+                // Optional: Handle course completion
+                showMessage("ಅಭಿನಂದನೆಗಳು! ನೀವು ಎಲ್ಲಾ ಪಾಠಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ!", 'info');
+                displayArea.textContent = "🎉"; // Celebration!
+                progressBar.style.backgroundColor = '#48bb78'; // Green progress bar
+            }
+        });
+
+        speakButton.addEventListener('click', () => {
+            if (isRecording) stopRecording(); // Stop recording if user wants to listen
+            const textToSpeak = courseContent[currentContentIndex]?.text;
+            if (textToSpeak) speakText(textToSpeak);
+        });
+
+         recordButton.addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                // Reset validation UI before starting a new attempt
+                resetValidationUI();
+                startRecording();
+            }
+        });
+
+        // --- Initialization ---
+        function initializeApp() {
+             console.log("Initializing app...");
+             prepareCourseContent(); // Prepare and shuffle content
+
+             if (courseContent.length === 0) {
+                 showMessage("ಯಾವುದೇ ಪಾಠದ ವಿಷಯ ಕಂಡುಬಂದಿಲ್ಲ!", 'error');
+                 // Disable all buttons if no content
+                 [prevButton, nextButton, speakButton, recordButton].forEach(btn => btn.disabled = true);
+                 return;
+             }
+
+             initializeSpeechRecognition(); // Setup speech recognition
+             updateDisplay(); // Show the first item and initial state
+             console.log("App initialized.");
+        }
+
+        // Wait for voices to load before initializing
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = initializeApp;
+            // Check if voices already loaded
+             if (speechSynthesis.getVoices().length > 0) {
+                 console.log("Voices already available.");
+                 setTimeout(initializeApp, 50); // Short delay just in case
+             } else {
+                  console.log("Waiting for voiceschanged event...");
+             }
+        } else {
+             console.warn("onvoiceschanged not supported. Using timeout.");
+             setTimeout(initializeApp, 500); // Fallback timeout
+        }
+
+    </script>
+
+</body>
+</html>
