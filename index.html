@@ -24,7 +24,7 @@
             background-color: #667eea;
 
             min-height: 100vh; padding: 1rem;
-            position: relative;
+            position: relative; /* Needed for absolute positioning of menu */
         }
         /* Add a semi-transparent overlay to improve text readability over the image */
         body::before {
@@ -255,9 +255,21 @@
                  updateValidationUI('processing'); const speechResult = event.results[0][0].transcript.trim(); const confidence = event.results[0][0].confidence; console.log(`Recognition: "${speechResult}" (Confidence: ${confidence.toFixed(2)})`); const currentTargetText = activeContent[currentContentIndex].text; const currentLessonTitle = activeContent[currentContentIndex].lessonTitle; const normalize = (str) => str.replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
                  if (normalize(speechResult) === normalize(currentTargetText)) {
                      if (!isCurrentItemCorrect) { if (currentMode === 'learn') { lessonScores[currentLessonTitle].correct++; updateLessonScoreDisplay(); console.log("Updated Learn Scores:", lessonScores); } else { testScore++; console.log("Test Score:", testScore); } }
-                     isCurrentItemCorrect = true; updateValidationUI('correct'); displayArea.classList.add('correct-answer-flash'); setTimeout(() => { displayArea.classList.remove('correct-answer-flash'); }, 800); nextButton.disabled = true; clearTimeout(nextButtonTimer); nextButtonTimer = setTimeout(() => { updateNavButtons(); nextButtonTimer = null; if (currentMode === 'learn') { showMessage("ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'info'); } else { showMessage("ಸರಿಯಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'pass'); } }, 800);
+                     isCurrentItemCorrect = true; updateValidationUI('correct'); displayArea.classList.add('correct-answer-flash'); setTimeout(() => { displayArea.classList.remove('correct-answer-flash'); }, 800); nextButton.disabled = true; clearTimeout(nextButtonTimer);
+                     // FIX: Clear timer variable *before* calling updateNavButtons in timeout
+                     nextButtonTimer = setTimeout(() => {
+                         nextButtonTimer = null; // Clear timer variable
+                         updateNavButtons(); // Re-evaluate and enable Next button if appropriate
+                         if (currentMode === 'learn') { showMessage("ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'info'); }
+                         else { showMessage("ಸರಿಯಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'pass'); }
+                     }, 800);
+
                  } else {
-                     isCurrentItemCorrect = false; updateValidationUI('incorrect'); if (currentMode === 'learn') { showMessage(`ಕೇಳಿಸಿದ್ದು: "${speechResult}". ಸರಿಯಾದದ್ದು: "${currentTargetText}".`, 'error'); } else { showMessage(`ತಪ್ಪು. ಸರಿಯಾದದ್ದು: "${currentTargetText}"`, 'error'); }
+                     isCurrentItemCorrect = false; updateValidationUI('incorrect');
+                     if (currentMode === 'learn') { showMessage(`ಕೇಳಿಸಿದ್ದು: "${speechResult}". ಸರಿಯಾದದ್ದು: "${currentTargetText}".`, 'error'); }
+                     else { showMessage(`ತಪ್ಪು. ಸರಿಯಾದದ್ದು: "${currentTargetText}"`, 'error'); }
+                     // FIX: Ensure nav buttons are updated if incorrect
+                     updateNavButtons();
                  }
                  setTimeout(() => { if(isRecording) stopRecordingVisuals(); }, 100);
              };
