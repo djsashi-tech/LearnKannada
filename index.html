@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ಕನ್ನಡ ಕಲಿಯೋಣ - ಆಟದೊಂದಿಗೆ ಕಲಿಯಿರಿ</title>
+    <title>ಕನ್ನಡ ಕಲಿಯೋಣ - ನಿಮ್ಮ ಕಲಿಕೆ, ನಿಮ್ಮ ದಾರಿ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -12,84 +12,72 @@
         body {
             font-family: 'Poppins', 'Noto Sans Kannada', sans-serif;
             user-select: none; -webkit-user-select: none; touch-action: manipulation;
-
-            /* --- Background Image --- */
-            /* Replace 'YOUR_IMAGE_URL_HERE.jpg' with the actual URL */
-            background-image: url('YOUR_IMAGE_URL_HERE.jpg');
-            background-size: cover; /* Cover the entire viewport */
-            background-position: center center; /* Center the image */
-            background-repeat: no-repeat; /* Do not repeat the image */
-            background-attachment: fixed; /* Keep background fixed during scroll */
-            /* Fallback color if image fails */
-            background-color: #667eea;
-
+            background-image: url('YOUR_IMAGE_URL_HERE.jpg'); /* Replace with your image URL */
+            background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed;
+            background-color: #667eea; /* Fallback */
             min-height: 100vh; padding: 1rem;
-            position: relative; /* Needed for absolute positioning of menu */
+            position: relative;
+            display: flex; /* For centering name input initially */
+            align-items: center;
+            justify-content: center;
         }
-        /* Add a semi-transparent overlay to improve text readability over the image */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, 0.1); /* Light overlay */
-            z-index: -1; /* Place behind content */
-        }
+        body::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.15); z-index: -1; } /* Slightly stronger overlay */
 
         button { min-height: 48px; min-width: 48px; }
-        .hidden { display: none; }
+        .hidden { display: none !important; } /* Ensure hidden is respected */
+
+        /* Name Input Section */
+        #nameInputContainer {
+            background-color: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            padding: 2.5rem 2rem; border-radius: 1.5rem; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3);
+            width: 100%; max-width: 28rem;
+        }
+        #nameInputContainer h2 { font-size: 1.8rem; font-weight: 700; color: #4338ca; margin-bottom: 1.5rem; }
+        #nameInput {
+            width: 100%; padding: 0.75rem 1rem; margin-bottom: 1.5rem;
+            border: 2px solid #cbd5e0; border-radius: 0.75rem; font-size: 1.1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        #nameInput:focus { border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3); outline: none; }
+        #submitNameButton {
+            font-family: 'Poppins', sans-serif; font-weight: 600; padding: 0.8rem 2.5rem;
+            border-radius: 0.75rem; border: none; cursor: pointer; transition: all 0.2s ease;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.12); display: inline-flex; align-items: center; gap: 0.7rem;
+            background: linear-gradient(to right, #60a5fa, #3b82f6); color: white;
+        }
+        #submitNameButton:hover { background: linear-gradient(to right, #3b82f6, #2563eb); box-shadow: 0 7px 15px rgba(0,0,0,0.18); transform: translateY(-2px); }
+
 
         /* Hamburger Menu Button */
-        #menuButton {
-            position: absolute; top: 1.5rem; left: 1.5rem; z-index: 100;
-            background-color: rgba(255, 255, 255, 0.85); /* Slightly less transparent */
-            backdrop-filter: blur(5px); color: #4a5568; border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 50%; width: 50px; height: 50px; display: flex;
-            align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            cursor: pointer; transition: all 0.3s ease;
-        }
+        #menuButton { position: absolute; top: 1.5rem; left: 1.5rem; z-index: 100; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(5px); color: #4a5568; border: 1px solid rgba(0,0,0,0.1); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s ease; }
         #menuButton:hover { background-color: rgba(255, 255, 255, 1); box-shadow: 0 6px 12px rgba(0,0,0,0.15); transform: scale(1.05); }
         #menuButton i { font-size: 1.5rem; }
 
         /* Menu Panel */
-        #menuPanel {
-            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background-color: rgba(255, 255, 255, 0.98); backdrop-filter: blur(15px);
-            box-shadow: 5px 0px 15px rgba(0, 0, 0, 0.2); z-index: 150;
-            transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); padding-top: 6rem;
-            border-right: 1px solid rgba(0,0,0,0.1);
-        }
+        #menuPanel { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background-color: rgba(255, 255, 255, 0.98); backdrop-filter: blur(15px); box-shadow: 5px 0px 15px rgba(0, 0, 0, 0.2); z-index: 150; transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); padding-top: 6rem; border-right: 1px solid rgba(0,0,0,0.1); }
         #menuPanel.open { left: 0; }
-
-        /* Close Menu Button */
         #closeMenuButton { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: #6b7280; font-size: 2rem; cursor: pointer; transition: color 0.3s; }
         #closeMenuButton:hover { color: #1f2937; }
-
-        /* Menu Items */
         #menuPanel a { display: block; padding: 1rem 1.5rem; font-size: 1.1rem; font-weight: 600; color: #374151; text-decoration: none; border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s, color 0.3s; display: flex; align-items: center; gap: 0.8rem; }
         #menuPanel a:hover { background-color: #f3f4f6; color: #1e40af; }
         #menuPanel a i { color: #60a5fa; width: 20px; text-align: center; }
         #menuPanel a.active { background-color: #dbeafe; color: #1e3a8a; font-weight: 700; border-left: 4px solid #3b82f6; }
         #menuPanel a.active i { color: #2563eb; }
 
-        /* Main Container Styling - Slightly less transparent for readability over image */
-        #appContainer, #testSelectionArea, #testResultsArea {
-             background-color: rgba(255, 255, 255, 0.97); /* More opaque */
-             backdrop-filter: blur(8px); /* Adjust blur */
-             border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1);
-             border: 1px solid rgba(255, 255, 255, 0.3); padding: 1.5rem 2rem; margin-top: 1rem;
-             width: 100%; max-width: 42rem; margin-left: auto; margin-right: auto;
-        }
+        /* Main Container Styling */
+        #appContainer, #testSelectionArea, #testResultsArea, #failedWordsContainer { background-color: rgba(255, 255, 255, 0.97); backdrop-filter: blur(8px); border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 6px 10px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); padding: 1.5rem 2rem; margin-top: 1rem; width: 100%; max-width: 42rem; margin-left: auto; margin-right: auto; }
 
-        /* Main Display Area - Enhanced */
+        /* Main Display Area */
         #displayArea { font-family: 'Noto Sans Kannada', sans-serif; font-size: clamp(3.5rem, 16vw, 9rem); line-height: 1.3; font-weight: 700; text-align: center; min-height: 280px; display: flex; align-items: center; justify-content: center; cursor: default; background: linear-gradient(145deg, #ffffff, #f7fafc); border-radius: 1.5rem; border: 1px solid #e2e8f0; color: #2d3748; margin-bottom: 2rem; padding: 2rem; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; }
         .correct-answer-flash { animation: flash-success 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
         @keyframes flash-success { 0% { transform: scale(1); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); } 50% { transform: scale(1.05); background: linear-gradient(135deg, #a8e063, #56ab2f); color: white; box-shadow: 0 12px 24px rgba(86, 171, 47, 0.3); border-color: transparent; } 100% { transform: scale(1); background: linear-gradient(145deg, #ffffff, #f7fafc); color: #2d3748; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); border-color: #e2e8f0; } }
 
-        /* Message & Recognition Boxes - Enhanced */
+        /* Message & Recognition Boxes */
         #messageBox, #recognizedText { min-height: 65px; font-size: 1.25rem; padding: 0.8rem 1.5rem; border-radius: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.8rem; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 3px 6px rgba(0,0,0,0.05); border: 1px solid transparent; }
         #recognizedText i { font-size: 1.5em; margin-right: 0.2em; }
 
-        /* Button Styles - Enhanced */
+        /* Button Styles */
         .nav-button { font-family: 'Poppins', sans-serif; font-weight: 600; padding: 0.9rem 2rem; border-radius: 0.75rem; border: none; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 5px 12px rgba(0,0,0,0.12); display: inline-flex; align-items: center; gap: 0.7rem; text-shadow: none; }
         .nav-button i { font-size: 1.1em; }
         .nav-button:hover:not(:disabled) { box-shadow: 0 7px 15px rgba(0,0,0,0.18); transform: translateY(-2px); }
@@ -107,7 +95,7 @@
         #lessonTitle { font-size: 1.5rem; font-weight: 700; color: #4338ca; margin-bottom: 0.3rem; text-align: center; }
         #lessonScore { font-size: 1.1rem; font-weight: 500; color: #4b5563; text-align: center; margin-bottom: 0.8rem; min-height: 1.5rem; }
 
-        /* Progress Bar & Hint Count Container */
+        /* Progress Bar & Hint Count */
         #progressHintContainer { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
         #progressBarContainer { flex-grow: 1; background-color: #e5e7eb; border-radius: 9999px; overflow: hidden; height: 1.4rem; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); }
         #progressBar { height: 100%; width: 0%; background: linear-gradient(to right, #34d399, #10b981); border-radius: 9999px; transition: width 0.5s ease-in-out; text-align: center; color: white; font-size: 0.85rem; line-height: 1.4rem; font-weight: 700; }
@@ -125,25 +113,35 @@
         .message-fail { background-color: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; font-weight: bold; }
 
         /* Test Selection Area */
-        #testSelectionArea { margin-bottom: 1.5rem; text-align: center; background-color: rgba(255, 255, 255, 0.97); padding: 1.5rem; border-radius: 1.5rem; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        #testSelectionArea { margin-bottom: 1.5rem; text-align: center; }
         .test-select-button { background: linear-gradient(to right, #a5b4fc, #818cf8); color: white; margin: 0.4rem; padding: 0.7rem 1.4rem; border-radius: 0.75rem; cursor: pointer; transition: all 0.3s; font-weight: 600; border: none; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
         .test-select-button:hover { background: linear-gradient(to right, #818cf8, #6366f1); transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.15); }
         .test-select-button.active { background: linear-gradient(to right, #34d399, #10b981); transform: translateY(-2px); box-shadow: 0 5px 10px rgba(16, 185, 129, 0.3); }
 
-        /* Test Results Area */
-         #testResultsArea { background-color: rgba(255, 255, 255, 0.97); }
+        /* Test Results & Failed Words Area */
+         #testResultsArea, #failedWordsContainer { background-color: rgba(255, 255, 255, 0.97); }
          #testResultStatus.text-green-600 { color: #16a34a; }
          #testResultStatus.text-red-600 { color: #dc2626; }
+         #failedWordsList { list-style-type: none; padding: 0; max-height: 300px; overflow-y: auto; }
+         #failedWordsList li { background-color: #fef2f2; color: #b91c1c; padding: 0.5rem 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem; border: 1px solid #fecaca; font-family: 'Noto Sans Kannada', sans-serif; font-size: 1.1rem; }
 
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <button id="menuButton" onclick="toggleMenu()">
+    <div id="nameInputContainer">
+        <h2>ನಿಮ್ಮ ಹೆಸರನ್ನು ನಮೂದಿಸಿ (Enter Your Name)</h2>
+        <input type="text" id="nameInput" placeholder="ಹೆಸರು (Name)" />
+        <button id="submitNameButton" onclick="submitName()">
+            <i class="fas fa-play"></i> ಪ್ರಾರಂಭಿಸಿ (Start)
+        </button>
+    </div>
+
+    <button id="menuButton" class="hidden" onclick="toggleMenu()">
         <i class="fas fa-bars"></i>
     </button>
 
-    <div id="menuPanel">
+    <div id="menuPanel" class="hidden">
         <button id="closeMenuButton" onclick="toggleMenu()">
             <i class="fas fa-times"></i>
         </button>
@@ -153,14 +151,20 @@
         <a href="#" id="menuTest" onclick="selectModeFromMenu('test')">
             <i class="fas fa-clipboard-check"></i> ಪರೀಕ್ಷೆ (Test)
         </a>
-        </div>
+        <a href="#" id="menuResults" onclick="selectModeFromMenu('results')">
+            <i class="fas fa-chart-bar"></i> ಫಲಿತಾಂಶಗಳು (Results)
+        </a>
+        <a href="#" id="menuChangeUser" onclick="changeUser()">
+            <i class="fas fa-user-edit"></i> ಬಳಕೆದಾರರನ್ನು ಬದಲಾಯಿಸಿ (Change User)
+        </a>
+    </div>
 
      <div id="testSelectionArea" class="hidden w-full max-w-3xl mx-auto">
         <h2 class="text-xl font-bold mb-4 text-indigo-800">ಪರೀಕ್ಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ (Select Test)</h2>
         </div>
 
 
-    <div id="appContainer" class="w-full max-w-3xl mx-auto">
+    <div id="appContainer" class="hidden w-full max-w-3xl mx-auto">
         <div id="progressHintContainer">
             <div id="progressBarContainer" title="ನಿಮ್ಮ ಪ್ರಗತಿ (Your Progress)">
                 <div id="progressBar"></div>
@@ -173,54 +177,50 @@
         <div id="lessonTitle">ಪಾಠದ ಶೀರ್ಷಿಕೆ</div>
         <div id="lessonScore">ಪಾಠದ ಸ್ಕೋರ್</div>
         <p id="instructionText" class="text-center text-gray-700 mb-5 text-base font-medium">ಕೆಳಗಿನದನ್ನು ಓದಿ ಮತ್ತು 'ಹೇಳಿ' ಬಟನ್ ಒತ್ತಿರಿ</p>
-
-        <div id="displayArea">
-             </div>
-
+        <div id="displayArea"></div>
         <div class="flex justify-between mt-6 mb-6">
-            <button id="prevButton" class="nav-button" title="ಹಿಂದಿನದು (Previous)">
-                <i class="fas fa-chevron-left"></i> ಹಿಂದಿನದು
-            </button>
-            <button id="nextButton" class="nav-button" title="ಮುಂದಿನದು (Next)">
-                ಮುಂದಿನದು <i class="fas fa-chevron-right"></i>
-            </button>
+            <button id="prevButton" class="nav-button" title="ಹಿಂದಿನದು (Previous)"><i class="fas fa-chevron-left"></i> ಹಿಂದಿನದು</button>
+            <button id="nextButton" class="nav-button" title="ಮುಂದಿನದು (Next)">ಮುಂದಿನದು <i class="fas fa-chevron-right"></i></button>
         </div>
-
         <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-5">
-            <button id="speakButton" class="nav-button action-button w-full sm:w-auto" title="ಕೇಳಿ (Listen)">
-                <i class="fas fa-volume-high"></i> ಕೇಳಿ
-            </button>
-            <button id="recordButton" class="nav-button record-button w-full sm:w-auto" title="ಹೇಳಿ (Speak)">
-                 <i class="fas fa-microphone-lines"></i> ಹೇಳಿ
-            </button>
+            <button id="speakButton" class="nav-button action-button w-full sm:w-auto" title="ಕೇಳಿ (Listen)"><i class="fas fa-volume-high"></i> ಕೇಳಿ</button>
+            <button id="recordButton" class="nav-button record-button w-full sm:w-auto" title="ಹೇಳಿ (Speak)"><i class="fas fa-microphone-lines"></i> ಹೇಳಿ</button>
         </div>
-
-        <div id="messageBox" class="mt-6 message-info">
-             <i class="fas fa-info-circle"></i> <span>ಪ್ರಾರಂಭಿಸಲು ಸಿದ್ಧ!</span>
-        </div>
-         <div id="recognizedText" class="mt-4 validation-default">
-             <i class="fas fa-comment-dots"></i> <span>ನಿಮ್ಮ ಸರದಿ (Your turn)</span>
-        </div>
+        <div id="messageBox" class="mt-6 message-info"><i class="fas fa-info-circle"></i> <span>ಪ್ರಾರಂಭಿಸಲು ಸಿದ್ಧ!</span></div>
+        <div id="recognizedText" class="mt-4 validation-default"><i class="fas fa-comment-dots"></i> <span>ನಿಮ್ಮ ಸರದಿ (Your turn)</span></div>
     </div>
 
      <div id="testResultsArea" class="hidden w-full max-w-3xl mx-auto">
          <h2 class="text-2xl font-bold mb-5 text-indigo-800">ಪರೀಕ್ಷೆಯ ಫಲಿತಾಂಶ (Test Result)</h2>
          <p id="testResultScore" class="text-xl mb-3 font-medium text-gray-800"></p>
          <p id="testResultStatus" class="text-3xl font-bold mb-6"></p>
-         <button onclick="restartApp()" class="nav-button action-button text-lg px-8 py-3">
-             <i class="fas fa-redo-alt"></i> ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ (Retry)
+         <button onclick="selectModeFromMenu('learn')" class="nav-button action-button text-lg px-8 py-3">
+             <i class="fas fa-book-open"></i> ಅಭ್ಯಾಸಕ್ಕೆ ಹಿಂತಿರುಗಿ (Back to Learn)
          </button>
      </div>
+
+     <div id="failedWordsContainer" class="hidden w-full max-w-3xl mx-auto">
+        <h2 class="text-2xl font-bold mb-5 text-indigo-800">ಕಷ್ಟಕರ ಪದಗಳು/ವಾಕ್ಯಗಳು (Challenging Words/Sentences)</h2>
+        <div id="failedWordsListContainer" class="max-h-96 overflow-y-auto bg-gray-50 p-4 rounded-lg border">
+            <ul id="failedWordsList">
+                </ul>
+            <p id="noFailedWordsMsg" class="hidden text-gray-600 text-center py-4">ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಪದಗಳನ್ನು ತಪ್ಪಾಗಿ ಹೇಳಿಲ್ಲ! (You haven't missed any words yet!)</p>
+        </div>
+         <button onclick="selectModeFromMenu('learn')" class="nav-button action-button text-lg px-8 py-3 mt-6">
+             <i class="fas fa-arrow-left"></i> ಮುಖ್ಯ ಮೆನು (Main Menu)
+         </button>
+    </div>
 
 
     <script>
         // --- Constants ---
         const TEST_SIZE = 50;
         const TEST_PASS_THRESHOLD = 35;
+        const LOCAL_STORAGE_KEY_PREFIX = 'kannadaLearnerApp_';
 
         // --- Configuration & Content ---
-        function shuffleArray(array) { /* Fisher-Yates shuffle... */ for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
-        const lessons = [ /* Lesson data... */
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+        const lessons = [ /* Lesson data as before... */
              { title: "ಪಾಠ 1: ಸರಳ ಪದಗಳು", shuffle: true, content: [ "ಮನೆ", "ನೀರು", "ಊಟ", "ಕೆಲಸ", "ಬಾ", "ಹೋಗು", "ಓದು", "ನೋಡು", "ಇದು", "ಅದು", "ಹಣ್ಣು", "ಹೂವು", "ಮರ", "ಗಿಡ", "ಬೀದಿ", "ದಾರ", "ಬಟ್ಟೆ", "ಚಹಾ", "ಕಾಫಿ", "ಹಾಲು", "ಮೊಸರು", "ಅಕ್ಕಿ", "ಬೇಳೆ", "ತರಕಾರಿ", "ಗಾಳಿ", "ಬೆಳಕು", "ಸೂರ್ಯ", "ಚಂದ್ರ", "ದಿನ", "ರಾತ್ರಿ", "ಬೆಳಿಗ್ಗೆ", "ಸಂಜೆ", "ಮಧ್ಯಾಹ್ನ", "ಹಣ", "ಅಂಗಡಿ", "ದಾರಿ", "ಊರು", "ದೇಶ", "ಶಾಲೆ", "ಕಾಲೇಜು", "ಆಟ", "ಪಾಠ", "ಹಾಡು", "ಮಾತು", "ನಗು", "ಅಳು", "ನಿದ್ದೆ", "ಎಚ್ಚರ", "ಸ್ವಲ್ಪ", "ತುಂಬಾ", "ದೊಡ್ಡ", "ಚಿಕ್ಕ", "ಒಳ್ಳೆಯ", "ಕೆಟ್ಟ", "ಹೊಸ", "ಹಳೆಯ", "ಸುಲಭ", "ಕಷ್ಟ", "ಬೇಗ", "ನಿಧಾನ", "ಇಲ್ಲಿ", "ಅಲ್ಲಿ", "ಹತ್ತಿರ", "ದೂರ", "ಮೇಲೆ", "ಕೆಳಗೆ", "ಒಳಗೆ", "ಹೊರಗೆ", "ಮುಂದೆ", "ಹಿಂದೆ", "ಯಾರು", "ಏನು", "ಯಾವಾಗ", "ಎಲ್ಲಿ", "ಹೇಗೆ", "ಏಕೆ", "ನಾನು", "ನೀನು", "ಅವನು", "ಅವಳು", "ಅದು", "ನಾವು", "ನೀವು", "ಅವರು", "ಇವರು", "ಅಮ್ಮ", "ಅಪ್ಪ", "ಅಣ್ಣ", "ತಮ್ಮ", "ಅಕ್ಕ", "ತಂಗಿ", "ಗೆಳೆಯ", "ಗೆಳತಿ", "ಮಗು", "ದೇವರು", "ಪುಸ್ತಕ", "ಪೆನ್ನು", "ಬಣ್ಣ", "ಸರಿ", "ತಪ್ಪು" ] },
              { title: "ಪಾಠ 2: ಎರಡು ಪದಗಳ ವಾಕ್ಯಗಳು", shuffle: true, content: [ "ಇದು ಮನೆ.", "ನೀರು ಕುಡಿ.", "ಮನೆಗೆ ಬಾ.", "ಅವನು ಬಂದನು.", "ಅವಳು ಹೋದಳು.", "ಕೆಲಸ ಮಾಡು.", "ಪುಸ್ತಕ ಓದು.", "ಚೆನ್ನಾಗಿ ನಗು.", "ಬೇಗ ಬಾ.", "ನಿಧಾನ ಹೋಗು.", "ಹಣ್ಣು ತಿನ್ನು.", "ಹೂವು ನೋಡು.", "ಮರ ಹತ್ತು.", "ಗಿಡ ನೆಡು.", "ಬೀದಿ ದಾಟು.", "ದಾರ ಹಿಡಿ.", "ಬಟ್ಟೆ ಹಾಕು.", "ಚಹಾ ಕುಡಿ.", "ಕಾಫಿ ಬೇಡ.", "ಹಾಲು ಕೊಡು.", "ಮೊಸರು ಬೇಕು.", "ಅಕ್ಕಿ ತೊಳಿ.", "ಬೇಳೆ ಬೇಯಿಸು.", "ತರಕಾರಿ ಕತ್ತರಿಸು.", "ಗಾಳಿ ಬೀಸಿತು.", "ಬೆಳಕು ಬಂತು.", "ಸೂರ್ಯ ಮೂಡಿದನು.", "ಚಂದ್ರ ಕಾಣಿಸಿದನು.", "ದಿನ ಕಳೆಯಿತು.", "ರಾತ್ರಿ ಆಯಿತು.", "ಬೆಳಿಗ್ಗೆ ಏಳು.", "ಸಂಜೆ ಬಾ.", "ಮಧ್ಯಾಹ್ನ ಊಟ.", "ಹಣ ಕೊಡು.", "ಅಂಗಡಿ ತೆರೆದಿದೆ.", "ದಾರಿ ತೋರಿಸು.", "ಊರು ತಲುಪಿದೆ.", "ದೇಶ ಚೆನ್ನಾಗಿದೆ.", "ಶಾಲೆ ಮುಗಿಯಿತು.", "ಕಾಲೇಜು ಆರಂಭ.", "ಆಟ ಆಡು.", "ಪಾಠ ಕಲಿ.", "ಹಾಡು ಹೇಳು.", "ಮಾತು ಕೇಳು.", "ನಗು ನಿಲ್ಲಿಸು.", "ಅಳು ನಿಲ್ಲಿಸು.", "ನಿದ್ದೆ ಮಾಡು.", "ಎಚ್ಚರ ಇರು.", "ಸ್ವಲ್ಪ ಕೊಡು.", "ತುಂಬಾ ತಿನ್ನು.", "ದೊಡ್ಡ ಮನೆ.", "ಚಿಕ್ಕ ಮಗು.", "ಒಳ್ಳೆಯ ಹುಡುಗ.", "ಕೆಟ್ಟ ಕನಸು.", "ಹೊಸ ಬಟ್ಟೆ.", "ಹಳೆಯ ನೆನಪು.", "ಸುಲಭ ಪ್ರಶ್ನೆ.", "ಕಷ್ಟ ಕೆಲಸ.", "ಬೇಗ ಬಾ.", "ನಿಧಾನ ಹೋಗು.", "ಇಲ್ಲಿ ಇಡು.", "ಅಲ್ಲಿ ನೋಡು.", "ಹತ್ತಿರ ಬಾ.", "ದೂರ ಹೋಗು.", "ಮೇಲೆ ನೋಡು.", "ಕೆಳಗೆ ಇಳಿಸು.", "ಒಳಗೆ ಬಾ.", "ಹೊರಗೆ ಹೋಗು.", "ಮುಂದೆ ಸರಿ.", "ಹಿಂದೆ ನೋಡು.", "ಯಾರು ಬಂದರು?", "ಏನು ಬೇಕು?", "ಯಾವಾಗ ಬರುವೆ?", "ಎಲ್ಲಿ ಹೋದೆ?", "ಹೇಗೆ ಮಾಡಿದೆ?", "ಏಕೆ ಕೇಳಿದೆ?", "ನಾನು ಬಂದೆ.", "ನೀನು ಹೋಗು.", "ಅವನು ನೋಡಿದನು.", "ಅವಳು ಕೇಳಿದಳು.", "ಅದು ಹಾರಿತು.", "ನಾವು ಗೆದ್ದೆವು.", "ನೀವು ಸೋತರು.", "ಅವರು ಬಂದರು.", "ಇವರು ಯಾರು?", "ಅಮ್ಮ ಕರೆದರು.", "ಅಪ್ಪ ಹೇಳಿದರು.", "ಅಣ್ಣ ನೋಡಿದನು.", "ತಮ್ಮ ಆಡಿದನು.", "ಅಕ್ಕ ಓದಿದಳು.", "ತಂಗಿ ಮಲಗಿದಳು.", "ಗೆಳೆಯ ಬಂದನು.", "ಗೆಳತಿ ಹೋದಳು.", "ಮಗು ಅಳುತ್ತಿದೆ.", "ದೇವರು ಇದ್ದಾನೆ.", "ಪುಸ್ತಕ ಕೊಡು.", "ಪೆನ್ನು ತಗೋ.", "ಬಣ್ಣ ಹಚ್ಚು.", "ಸರಿ ಹೇಳು.", "ತಪ್ಪು ಮಾಡಬೇಡ." ] },
              { title: "ಪಾಠ 3: ಮೂರು ಪದಗಳ ವಾಕ್ಯಗಳು", shuffle: true, content: [ "ನಾನು ನೀರು ಕುಡಿದೆ.", "ಅವಳು ಶಾಲೆಗೆ ಹೋದಳು.", "ಇದು ದೊಡ್ಡ ಮನೆ.", "ಅವನು ಚೆನ್ನಾಗಿ ಓದುತ್ತಾನೆ.", "ನಾವು ನಾಳೆ ಬರುತ್ತೇವೆ.", "ದಯವಿಟ್ಟು ಇಲ್ಲಿ ಬಾ.", "ಅವನು ಕೆಲಸ ಮಾಡುತ್ತಾನೆ.", "ಅವಳು ಹಾಡು ಹೇಳುತ್ತಾಳೆ.", "ಮಗು ಚೆನ್ನಾಗಿ ನಗುತ್ತದೆ.", "ನಾವು ಆಟ ಆಡುತ್ತೇವೆ.", "ನಾನು ಹಣ್ಣು ತಿಂದೆನು.", "ಅವಳು ಹೂವು ನೋಡಿದಳು.", "ಅವನು ಮರ ಹತ್ತಿದನು.", "ನಾವು ಗಿಡ ನೆಟ್ಟೆವು.", "ನೀನು ಬೀದಿ ದಾಟು.", "ಅವಳು ದಾರ ಹಿಡಿದಳು.", "ನಾನು ಬಟ್ಟೆ ಹಾಕಿದೆನು.", "ಅವನು ಚಹಾ ಕುಡಿದನು.", "ಅವಳಿಗೆ ಕಾಫಿ ಬೇಡ.", "ಅಮ್ಮ ಹಾಲು ಕೊಟ್ಟರು.", "ನನಗೆ ಮೊಸರು ಬೇಕು.", "ಅವಳು ಅಕ್ಕಿ ತೊಳೆದಳು.", "ಅಪ್ಪ ಬೇಳೆ ತಂದರು.", "ಅಮ್ಮ ತರಕಾರಿ ಹೆಚ್ಚಿದರು.", "ತಣ್ಣನೆ ಗಾಳಿ ಬೀಸಿತು.", "ಪ್ರಕಾಶಮಾನ ಬೆಳಕು ಬಂತು.", "ಸೂರ್ಯ ಪೂರ್ವದಲ್ಲಿ ಮೂಡಿದನು.", "ಚಂದ್ರ ಆಕಾಶದಲ್ಲಿ ಕಾಣಿಸಿದನು.", "ದಿನ ಬೇಗ ಕಳೆಯಿತು.", "ರಾತ್ರಿ ನಿಧಾನವಾಗಿ ಆಯಿತು.", "ನಾನು ಬೆಳಿಗ್ಗೆ ಬೇಗ ಎದ್ದೆ.", "ನೀನು ಸಂಜೆ ಮನೆಗೆ ಬಾ.", "ನಾವು ಮಧ್ಯಾಹ್ನ ಊಟ ಮಾಡಿದೆವು.", "ಅವನು ನನಗೆ ಹಣ ಕೊಟ್ಟನು.", "ಅಂಗಡಿ ಈಗ ತೆರೆದಿದೆ.", "ಅವಳು ದಾರಿ ತೋರಿಸಿದಳು.", "ನಾನು ಊರು ತಲುಪಿದೆನು.", "ನಮ್ಮ ದೇಶ ಸುಂದರವಾಗಿದೆ.", "ಶಾಲೆ ನಾಳೆ ರಜೆ.", "ಕಾಲೇಜು ಸೋಮವಾರ ಆರಂಭ.", "ಮಕ್ಕಳು ಆಟ ಆಡುತ್ತಾರೆ.", "ವಿದ್ಯಾರ್ಥಿಗಳು ಪಾಠ ಕಲಿಯುತ್ತಾರೆ.", "ಗಾಯಕಿ ಹಾಡು ಹೇಳುತ್ತಾಳೆ.", "ಹಿರಿಯರು ಮಾತು ಹೇಳುತ್ತಾರೆ.", "ಅವಳು ಜೋರಾಗಿ ನಕ್ಕಳು.", "ಮಗು ತುಂಬಾ ಅಳುತ್ತಿದೆ.", "ಅವನು ಗಾಢ ನಿದ್ದೆ ಮಾಡಿದನು.", "ನಾನು ಈಗ ಎಚ್ಚರವಾದೆ.", "ನನಗೆ ಸ್ವಲ್ಪ ನೀರು ಕೊಡು.", "ಅವನು ತುಂಬಾ ಊಟ ಮಾಡಿದನು.", "ಇದು ತುಂಬಾ ದೊಡ್ಡ ಮನೆ.", "ಅವಳು ಚಿಕ್ಕ ಮಗು ಅಲ್ಲ.", "ಅವನು ಒಳ್ಳೆಯ ಹುಡುಗ ಹೌದು.", "ನಾನು ಕೆಟ್ಟ ಕನಸು ಕಂಡೆ.", "ಇವು ಹೊಸ ಬಟ್ಟೆಗಳು.", "ಅದು ಹಳೆಯ ನೆನಪು ಮಾತ್ರ.", "ಈ ಪ್ರಶ್ನೆ ಸುಲಭವಾಗಿದೆ.", "ಆ ಕೆಲಸ ಕಷ್ಟಕರವಾಗಿದೆ.", "ನೀನು ಬೇಗ ಬರಬೇಕು.", "ಅವನು ನಿಧಾನವಾಗಿ ಹೋದನು.", "ಪುಸ್ತಕವನ್ನು ಇಲ್ಲಿ ಇಡು.", "ಆ ಚಿತ್ರವನ್ನು ಅಲ್ಲಿ ನೋಡು.", "ನನ್ನ ಹತ್ತಿರ ಬಾ.", "ಅವನಿಂದ ದೂರ ಹೋಗು.", "ಆಕಾಶದ ಮೇಲೆ ನೋಡು.", "ಮರದಿಂದ ಕೆಳಗೆ ಇಳಿಸು.", "ಮನೆಯ ಒಳಗೆ ಬಾ.", "ಶಾಲೆಯ ಹೊರಗೆ ಹೋಗು.", "ಸಾಲಿನಲ್ಲಿ ಮುಂದೆ ಸರಿ.", "ಕನ್ನಡಿಯ ಹಿಂದೆ ನೋಡು.", "ನಿನ್ನೆ ಯಾರು ಬಂದರು?", "ನಿನಗೆ ಏನು ಬೇಕು?", "ನೀನು ಯಾವಾಗ ಬರುವೆ?", "ಅವನು ಎಲ್ಲಿಗೆ ಹೋದನು?", "ಇದನ್ನು ಹೇಗೆ ಮಾಡಿದೆ?", "ನೀನು ಏಕೆ ಕೇಳಿದೆ?", "ನಾನು ನಿನ್ನೆ ಬಂದೆ.", "ನೀನು ನಾಳೆ ಹೋಗು.", "ಅವನು ಸಿನಿಮಾ ನೋಡಿದನು.", "ಅವಳು ಹಾಡು ಕೇಳಿದಳು.", "ಆ ಹಕ್ಕಿ ಹಾರಿತು.", "ನಾವು ಪಂದ್ಯ ಗೆದ್ದೆವು.", "ನೀವು ಏಕೆ ಸೋತರು?", "ಅವರು ನಾಟಕ ನೋಡಿದರು.", "ಇವರು ನನ್ನ ಸ್ನೇಹಿತರು.", "ಅಮ್ಮ ಅಡುಗೆ ಮಾಡಿದರು.", "ಅಪ್ಪ ಪೇಪರ್ ಓದಿದರು.", "ಅಣ್ಣ ಕ್ರಿಕೆಟ್ ಆಡಿದನು.", "ತಮ್ಮ ಶಾಲೆಗೆ ಹೋದನು.", "ಅಕ್ಕ ಚಿತ್ರ ಬರೆದಳು.", "ತಂಗಿ ಗೊಂಬೆ ಆಡಿದಳು.", "ನನ್ನ ಗೆಳೆಯ ಬಂದನು.", "ಅವಳ ಗೆಳತಿ ಹೋದಳು.", "ಆ ಮಗು ಅಳುತ್ತಿದೆ.", "ದೇವರು ಎಲ್ಲೆಡೆ ಇದ್ದಾನೆ.", "ನಾನು ಪುಸ್ತಕ ಓದಿದೆನು.", "ಅವನು ಪೆನ್ನು ತಂದನು.", "ಅವಳು ಬಣ್ಣ ಹಚ್ಚಿದಳು.", "ನೀನು ಸರಿ ಹೇಳಿದೆ.", "ಅವನು ತಪ್ಪು ಮಾಡಲಿಲ್ಲ." ] },
@@ -228,49 +228,231 @@
         ];
 
         // --- Global State Variables ---
-        let currentMode = 'learn'; let currentLessonIndexForTest = -1; let currentContentIndex = 0; let activeContent = []; let synth = window.speechSynthesis; let recognition; let isRecording = false; let isCurrentItemCorrect = false; let micPermissionState = 'prompt'; let hintCounter = 0; let lessonScores = {}; let testScore = 0; let currentItemHintUsed = false; let nextButtonTimer = null;
+        let currentUserName = null;
+        let currentMode = 'learn';
+        let currentLessonIndexForTest = -1;
+        let currentContentIndex = 0;
+        let activeContent = [];
+        let synth = window.speechSynthesis;
+        let recognition;
+        let isRecording = false;
+        let isCurrentItemCorrect = false;
+        let micPermissionState = 'prompt';
+        let hintCounter = 0;
+        let lessonScores = {};
+        let testScore = 0;
+        let currentItemHintUsed = false;
+        let nextButtonTimer = null;
+        let failedWords = []; // Array to store failed words for the current user
 
         // --- DOM Element References ---
-        const menuButton = document.getElementById('menuButton'); const menuPanel = document.getElementById('menuPanel'); const menuLearnLink = document.getElementById('menuLearn'); const menuTestLink = document.getElementById('menuTest'); const appContainer = document.getElementById('appContainer'); const testSelectionArea = document.getElementById('testSelectionArea'); const testResultsArea = document.getElementById('testResultsArea'); const testResultScore = document.getElementById('testResultScore'); const testResultStatus = document.getElementById('testResultStatus'); const displayArea = document.getElementById('displayArea'); const lessonTitleElement = document.getElementById('lessonTitle'); const lessonScoreElement = document.getElementById('lessonScore'); const prevButton = document.getElementById('prevButton'); const nextButton = document.getElementById('nextButton'); const speakButton = document.getElementById('speakButton'); const recordButton = document.getElementById('recordButton'); const messageBox = document.getElementById('messageBox'); const messageBoxIcon = messageBox.querySelector('i'); const messageBoxText = messageBox.querySelector('span'); const recognizedTextElement = document.getElementById('recognizedText'); const recognizedTextIcon = recognizedTextElement.querySelector('i'); const recognizedTextSpan = recognizedTextElement.querySelector('span'); const progressBar = document.getElementById('progressBar'); const progressBarContainer = document.getElementById('progressBarContainer'); const hintCounterDisplay = document.getElementById('hintCounterDisplay'); const hintCountSpan = document.getElementById('hintCount'); const instructionText = document.getElementById('instructionText');
+        const nameInputContainer = document.getElementById('nameInputContainer');
+        const nameInput = document.getElementById('nameInput');
+        const menuButton = document.getElementById('menuButton');
+        const menuPanel = document.getElementById('menuPanel');
+        const menuLearnLink = document.getElementById('menuLearn');
+        const menuTestLink = document.getElementById('menuTest');
+        const menuResultsLink = document.getElementById('menuResults');
+        const appContainer = document.getElementById('appContainer');
+        const testSelectionArea = document.getElementById('testSelectionArea');
+        const testResultsArea = document.getElementById('testResultsArea');
+        const failedWordsContainer = document.getElementById('failedWordsContainer');
+        const failedWordsList = document.getElementById('failedWordsList');
+        const noFailedWordsMsg = document.getElementById('noFailedWordsMsg');
+        const testResultScore = document.getElementById('testResultScore');
+        const testResultStatus = document.getElementById('testResultStatus');
+        const displayArea = document.getElementById('displayArea');
+        const lessonTitleElement = document.getElementById('lessonTitle');
+        const lessonScoreElement = document.getElementById('lessonScore');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const speakButton = document.getElementById('speakButton');
+        const recordButton = document.getElementById('recordButton');
+        const messageBox = document.getElementById('messageBox');
+        const messageBoxIcon = messageBox.querySelector('i');
+        const messageBoxText = messageBox.querySelector('span');
+        const recognizedTextElement = document.getElementById('recognizedText');
+        const recognizedTextIcon = recognizedTextElement.querySelector('i');
+        const recognizedTextSpan = recognizedTextElement.querySelector('span');
+        const progressBar = document.getElementById('progressBar');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+        const hintCounterDisplay = document.getElementById('hintCounterDisplay');
+        const hintCountSpan = document.getElementById('hintCount');
+        const instructionText = document.getElementById('instructionText');
+
+        // --- LocalStorage Helper Functions ---
+        function getUserDataKey(userName) { return `${LOCAL_STORAGE_KEY_PREFIX}${userName}`; }
+        function saveUserData() {
+            if (!currentUserName) return;
+            const userData = {
+                currentMode, currentContentIndex, lessonScores, hintCounter, failedWords,
+                currentLessonIndexForTest,
+                // To resume a test, we'd need to save 'testScore' and the specific 'activeContent' for that test.
+                // For simplicity, tests currently restart. To resume, we'd save test's activeContent.
+            };
+            localStorage.setItem(getUserDataKey(currentUserName), JSON.stringify(userData));
+            console.log("User data saved for:", currentUserName);
+        }
+        function loadUserData() {
+            if (!currentUserName) return null;
+            const data = localStorage.getItem(getUserDataKey(currentUserName));
+            return data ? JSON.parse(data) : null;
+        }
+        function clearCurrentUser() {
+            if (currentUserName) {
+                // Optionally clear specific user data, or just reset currentUserName
+                // localStorage.removeItem(getUserDataKey(currentUserName));
+            }
+            currentUserName = null;
+            localStorage.removeItem('kannadaLearnerApp_lastUser'); // Clear last user
+        }
+
 
         // --- Core Application Functions ---
+        function submitName() {
+            const name = nameInput.value.trim();
+            if (name) {
+                currentUserName = name;
+                localStorage.setItem('kannadaLearnerApp_lastUser', currentUserName); // Remember last user
+                nameInputContainer.classList.add('hidden');
+                menuButton.classList.remove('hidden');
+                // menuPanel.classList.remove('hidden'); // Menu panel itself is controlled by toggleMenu
+                initializeAppLogic(); // Proceed to initialize app logic
+            } else {
+                alert("ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರನ್ನು ನಮೂದಿಸಿ (Please enter your name).");
+            }
+        }
+
+        function changeUser() {
+            clearCurrentUser();
+            // Hide app elements, show name input
+            appContainer.classList.add('hidden');
+            testSelectionArea.classList.add('hidden');
+            testResultsArea.classList.add('hidden');
+            failedWordsContainer.classList.add('hidden');
+            menuButton.classList.add('hidden');
+            menuPanel.classList.remove('open'); // Close menu
+            nameInputContainer.classList.remove('hidden');
+            nameInput.value = ""; // Clear input field
+            nameInput.focus();
+        }
+
+
         function toggleMenu() { menuPanel.classList.toggle('open'); }
-        function selectModeFromMenu(mode) { setMode(mode); toggleMenu(); }
-        function setMode(mode) { currentMode = mode; console.log("Mode set to:", currentMode); menuLearnLink.classList.toggle('active', mode === 'learn'); menuTestLink.classList.toggle('active', mode === 'test'); appContainer.classList.remove('hidden'); testResultsArea.classList.add('hidden'); testSelectionArea.classList.toggle('hidden', mode !== 'test'); if (mode === 'learn') { initializeLearnMode(); } else { populateTestSelection(); appContainer.classList.add('hidden'); } }
+        function selectModeFromMenu(mode) {
+            setMode(mode);
+            toggleMenu();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            console.log("Mode set to:", currentMode);
+
+            menuLearnLink.classList.toggle('active', mode === 'learn');
+            menuTestLink.classList.toggle('active', mode === 'test');
+            menuResultsLink.classList.toggle('active', mode === 'results');
+
+            // Hide all main content sections first
+            appContainer.classList.add('hidden');
+            testSelectionArea.classList.add('hidden');
+            testResultsArea.classList.add('hidden');
+            failedWordsContainer.classList.add('hidden');
+
+            if (mode === 'learn') {
+                initializeLearnMode();
+                appContainer.classList.remove('hidden');
+            } else if (mode === 'test') {
+                populateTestSelection();
+                testSelectionArea.classList.remove('hidden');
+            } else if (mode === 'results') {
+                displayFailedWords();
+                failedWordsContainer.classList.remove('hidden');
+            }
+            saveUserData(); // Save mode change
+        }
+
         function populateTestSelection() { testSelectionArea.innerHTML = `<h2 class="text-xl font-bold mb-4 text-indigo-800">ಪರೀಕ್ಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ (Select Test)</h2>`; lessons.forEach((lesson, index) => { const btn = document.createElement('button'); btn.textContent = lesson.title; btn.className = 'test-select-button'; btn.onclick = () => startTest(index); testSelectionArea.appendChild(btn); }); }
-        function initializeLearnMode() { prepareCourseContent(false); if (activeContent.length > 0) { currentContentIndex = 0; hintCounter = 0; hintCountSpan.textContent = hintCounter; updateDisplay(); appContainer.classList.remove('hidden'); testSelectionArea.classList.add('hidden'); testResultsArea.classList.add('hidden'); } else { showMessage("ಕಲಿಕೆಯ ವಿಷಯ ಕಂಡುಬಂದಿಲ್ಲ!", 'error'); } }
-        function startTest(lessonIndex) { currentLessonIndexForTest = lessonIndex; console.log(`Starting test for Lesson ${lessonIndex + 1}: ${lessons[lessonIndex].title}`); prepareCourseContent(true, lessonIndex); if (activeContent.length > 0) { currentContentIndex = 0; testScore = 0; updateDisplay(); testSelectionArea.classList.add('hidden'); appContainer.classList.remove('hidden'); testResultsArea.classList.add('hidden'); } else { showMessage(`ಪರೀಕ್ಷೆಯ ವಿಷಯ ಕಂಡುಬಂದಿಲ್ಲ! (Lesson ${lessonIndex + 1})`, 'error'); } }
-        function prepareCourseContent(isTest = false, testLessonIndex = -1) { activeContent = []; lessonScores = {}; if (isTest && testLessonIndex >= 0 && testLessonIndex < lessons.length) { const lesson = lessons[testLessonIndex]; let lessonContent = [...lesson.content]; if (lesson.shuffle) { lessonContent = shuffleArray(lessonContent); } const testItems = lessonContent.slice(0, TEST_SIZE); testItems.forEach((item) => { activeContent.push({ text: item, lessonTitle: lesson.title }); }); console.log(`Prepared ${activeContent.length} items for test: ${lesson.title}`); } else if (!isTest) { lessons.forEach((lesson) => { let contentToAdd = [...lesson.content]; if (lesson.shuffle) { contentToAdd = shuffleArray(contentToAdd); } lessonScores[lesson.title] = { correct: 0, total: contentToAdd.length, hints: 0 }; contentToAdd.forEach((item, itemIndex) => { activeContent.push({ text: item, lessonTitle: lesson.title, isFirstItemOfLesson: itemIndex === 0 }); }); }); console.log(`Prepared ${activeContent.length} items for learn mode.`); console.log("Initial Learn Scores:", lessonScores); } else { console.error("Invalid state for prepareCourseContent"); } }
-        function updateDisplay() { clearTimeout(nextButtonTimer); nextButtonTimer = null; displayArea.classList.remove('correct-answer-flash'); if (activeContent.length === 0 || currentContentIndex >= activeContent.length) { if (currentMode === 'test' && activeContent.length > 0) { showTestResults(); } return; } const currentItem = activeContent[currentContentIndex]; displayArea.textContent = currentItem.text; lessonTitleElement.textContent = currentItem.lessonTitle; isCurrentItemCorrect = false; if (currentMode === 'learn') { currentItemHintUsed = false; } resetValidationUI(); speakButton.classList.toggle('hidden', currentMode === 'test'); hintCounterDisplay.classList.toggle('hidden', currentMode === 'test'); lessonScoreElement.classList.toggle('hidden', currentMode === 'test'); instructionText.textContent = currentMode === 'test' ? "ಕೆಳಗಿನದನ್ನು ಓದಿ ಸರಿಯಾಗಿ ಹೇಳಿ" : "ಕೆಳಗಿನದನ್ನು ಓದಿ 'ಕೇಳಿ' ಅಥವಾ 'ಹೇಳಿ' ಬಟನ್ ಒತ್ತಿರಿ"; if (currentMode === 'learn') { updateLessonScoreDisplay(); } updateNavButtons(); updateProgressBar(); if (currentMode === 'learn' && currentItem.isFirstItemOfLesson && currentContentIndex > 0) { showMessage(`ಹೊಸ ಪಾಠ ಪ್ರಾರಂಭ: ${currentItem.lessonTitle}`, 'info'); } else if (currentMode === 'learn' && currentContentIndex === 0 && currentItem.isFirstItemOfLesson) { showMessage(`ಪಾಠ ಪ್ರಾರಂಭ: ${currentItem.lessonTitle}`, 'info'); } else if (currentMode === 'test' && currentContentIndex === 0) { showMessage(`ಪರೀಕ್ಷೆ ಪ್ರಾರಂಭ: ${currentItem.lessonTitle}`, 'info'); } }
-        function updateLessonScoreDisplay() { if (currentMode !== 'learn' || activeContent.length === 0) { lessonScoreElement.textContent = ""; return; } const currentLessonTitle = activeContent[currentContentIndex].lessonTitle; const score = lessonScores[currentLessonTitle]; if (score) { lessonScoreElement.textContent = `ಪಾಠದ ಸ್ಕೋರ್: ${score.correct} / ${score.total}`; } else { lessonScoreElement.textContent = ""; } }
+        function initializeLearnMode() { prepareCourseContent(false); if (activeContent.length > 0) { currentContentIndex = 0; /* hintCounter reset per session or load from storage */ updateDisplay(); } else { showMessage("ಕಲಿಕೆಯ ವಿಷಯ ಕಂಡುಬಂದಿಲ್ಲ!", 'error'); } }
+        function startTest(lessonIndex) { currentLessonIndexForTest = lessonIndex; console.log(`Starting test for Lesson ${lessonIndex + 1}: ${lessons[lessonIndex].title}`); prepareCourseContent(true, lessonIndex); if (activeContent.length > 0) { currentContentIndex = 0; testScore = 0; updateDisplay(); testSelectionArea.classList.add('hidden'); appContainer.classList.remove('hidden'); } else { showMessage(`ಪರೀಕ್ಷೆಯ ವಿಷಯ ಕಂಡುಬಂದಿಲ್ಲ! (Lesson ${lessonIndex + 1})`, 'error'); } }
+
+        function prepareCourseContent(isTest = false, testLessonIndex = -1) {
+            activeContent = [];
+            // lessonScores are loaded/initialized in initializeAppLogic
+
+            if (isTest && testLessonIndex >= 0 && testLessonIndex < lessons.length) {
+                const lesson = lessons[testLessonIndex]; let lessonContent = [...lesson.content]; if (lesson.shuffle) { lessonContent = shuffleArray(lessonContent); }
+                const testItems = lessonContent.slice(0, TEST_SIZE); testItems.forEach((item) => { activeContent.push({ text: item, lessonTitle: lesson.title }); });
+                console.log(`Prepared ${activeContent.length} items for test: ${lesson.title}`);
+            } else if (!isTest) {
+                lessons.forEach((lesson) => { let contentToAdd = [...lesson.content]; if (lesson.shuffle) { contentToAdd = shuffleArray(contentToAdd); }
+                    if (!lessonScores[lesson.title]) { // Initialize if not loaded
+                        lessonScores[lesson.title] = { correct: 0, total: contentToAdd.length, hints: 0 };
+                    } else { // Ensure total is up-to-date if content changes
+                        lessonScores[lesson.title].total = contentToAdd.length;
+                    }
+                    contentToAdd.forEach((item, itemIndex) => { activeContent.push({ text: item, lessonTitle: lesson.title, isFirstItemOfLesson: itemIndex === 0 }); });
+                });
+                console.log(`Prepared ${activeContent.length} items for learn mode.`);
+            }
+            saveUserData(); // Save prepared content structure (or at least indices)
+        }
+
+        function updateDisplay() { clearTimeout(nextButtonTimer); nextButtonTimer = null; displayArea.classList.remove('correct-answer-flash'); if (activeContent.length === 0 || currentContentIndex >= activeContent.length) { if (currentMode === 'test' && activeContent.length > 0 && currentContentIndex >= TEST_SIZE) { showTestResults(); } return; } const currentItem = activeContent[currentContentIndex]; displayArea.textContent = currentItem.text; lessonTitleElement.textContent = currentItem.lessonTitle; isCurrentItemCorrect = false; if (currentMode === 'learn') { currentItemHintUsed = false; } resetValidationUI(); speakButton.classList.toggle('hidden', currentMode === 'test'); hintCounterDisplay.classList.toggle('hidden', currentMode === 'test'); lessonScoreElement.classList.toggle('hidden', currentMode === 'test'); instructionText.textContent = currentMode === 'test' ? "ಕೆಳಗಿನದನ್ನು ಓದಿ ಸರಿಯಾಗಿ ಹೇಳಿ" : "ಕೆಳಗಿನದನ್ನು ಓದಿ 'ಕೇಳಿ' ಅಥವಾ 'ಹೇಳಿ' ಬಟನ್ ಒತ್ತಿರಿ"; if (currentMode === 'learn') { updateLessonScoreDisplay(); } updateNavButtons(); updateProgressBar(); if (currentMode === 'learn' && currentItem.isFirstItemOfLesson && currentContentIndex > 0) { showMessage(`ಹೊಸ ಪಾಠ ಪ್ರಾರಂಭ: ${currentItem.lessonTitle}`, 'info'); } else if (currentMode === 'learn' && currentContentIndex === 0 && currentItem.isFirstItemOfLesson) { showMessage(`ಪಾಠ ಪ್ರಾರಂಭ: ${currentItem.lessonTitle}`, 'info'); } else if (currentMode === 'test' && currentContentIndex === 0) { showMessage(`ಪರೀಕ್ಷೆ ಪ್ರಾರಂಭ: ${currentItem.lessonTitle}`, 'info'); } }
+        function updateLessonScoreDisplay() { if (currentMode !== 'learn' || activeContent.length === 0 || !activeContent[currentContentIndex]) { lessonScoreElement.textContent = ""; return; } const currentLessonTitle = activeContent[currentContentIndex].lessonTitle; const score = lessonScores[currentLessonTitle]; if (score) { lessonScoreElement.textContent = `ಪಾಠದ ಸ್ಕೋರ್: ${score.correct} / ${score.total}`; } else { lessonScoreElement.textContent = ""; } }
         function updateProgressBar() { const totalItems = activeContent.length; const completedItems = currentContentIndex + 1; const progress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0; progressBar.style.width = `${progress}%`; progressBarContainer.title = `ಪ್ರಗತಿ: ${completedItems} / ${totalItems}`; }
-        function updateNavButtons() { prevButton.disabled = currentMode === 'test' || currentContentIndex === 0; const isLastItem = currentContentIndex >= activeContent.length - 1; nextButton.disabled = isLastItem || !isCurrentItemCorrect || nextButtonTimer !== null; }
-        function speakText(text) { if (synth.speaking) { synth.cancel(); setTimeout(() => speakText(text), 100); return; } if (text === '') return; let voices = synth.getVoices(); let kannadaVoice = voices.find(voice => voice.lang === 'kn-IN') || voices.find(voice => voice.lang.startsWith('kn')) || voices.find(voice => voice.lang === 'hi-IN') || voices.find(voice => voice.default); if (!kannadaVoice) { showMessage("ಯಾವುದೇ ಸೂಕ್ತ ಧ್ವನಿ ಲಭ್ಯವಿಲ್ಲ.", 'error'); return; } const utterThis = new SpeechSynthesisUtterance(text); utterThis.voice = kannadaVoice; utterThis.lang = kannadaVoice.lang; utterThis.pitch = 1; utterThis.rate = 0.85; utterThis.onstart = () => { speakButton.disabled = true; }; utterThis.onend = () => { speakButton.disabled = false; }; utterThis.onerror = (event) => { console.error('SpeechSynthesis Error:', event.error, 'Utterance:', text, 'Voice:', kannadaVoice?.name); showMessage(`ಧ್ವನಿ ದೋಷ: ${event.error}. ದಯವಿಟ್ಟು ಪುಟವನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿ.`, 'error'); speakButton.disabled = false; }; synth.speak(utterThis); }
+        function updateNavButtons() { prevButton.disabled = (currentMode === 'test' && currentContentIndex === 0) || (currentMode === 'learn' && currentContentIndex === 0) ; const isLastItemInTest = currentMode === 'test' && currentContentIndex >= TEST_SIZE - 1; const isLastItemInLearn = currentMode === 'learn' && currentContentIndex >= activeContent.length - 1; nextButton.disabled = (isLastItemInTest || isLastItemInLearn) || !isCurrentItemCorrect || nextButtonTimer !== null; }
+
+        function speakText(text) {
+            if (synth.speaking) {
+                console.log("Synth speaking, cancelling previous.");
+                synth.cancel();
+                // Adding a slight delay for cancel to take effect before speaking again
+                setTimeout(() => speakText(text), 150);
+                return;
+            }
+            if (text === '') return;
+            let voices = synth.getVoices();
+            if (voices.length === 0) { // Voices might not be loaded yet
+                console.warn("Voices not loaded yet, trying again shortly.");
+                speechSynthesis.onvoiceschanged = () => { // Listen for voices to load
+                    console.log("Voices loaded, retrying speakText.");
+                    speakText(text); // Retry speaking
+                };
+                // If onvoiceschanged doesn't fire, this might not work, but it's a common pattern
+                return;
+            }
+            let kannadaVoice = voices.find(voice => voice.lang === 'kn-IN') || voices.find(voice => voice.lang.startsWith('kn')) || voices.find(voice => voice.lang === 'hi-IN') || voices.find(voice => voice.default);
+            if (!kannadaVoice) { showMessage("ಯಾವುದೇ ಸೂಕ್ತ ಧ್ವನಿ ಲಭ್ಯವಿಲ್ಲ.", 'error'); console.error("No suitable voice found."); return; }
+
+            const utterThis = new SpeechSynthesisUtterance(text);
+            utterThis.voice = kannadaVoice; utterThis.lang = kannadaVoice.lang; utterThis.pitch = 1; utterThis.rate = 0.85;
+            utterThis.onstart = () => { console.log("TTS started."); speakButton.disabled = true; };
+            utterThis.onend = () => { console.log("TTS ended."); speakButton.disabled = false; };
+            utterThis.onerror = (event) => { console.error('SpeechSynthesis Error:', event.error, 'Utterance:', text, 'Voice:', kannadaVoice?.name); showMessage(`ಧ್ವನಿ ದೋಷ: ${event.error}. ದಯವಿಟ್ಟು ಪುಟವನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿ.`, 'error'); speakButton.disabled = false; };
+            console.log("Attempting to speak:", text, "with voice:", kannadaVoice.name);
+            synth.speak(utterThis);
+        }
+
         function showMessage(message, type = 'info') { messageBoxText.textContent = message; const isResult = type === 'pass' || type === 'fail'; const baseClass = isResult ? 'mt-6 font-semibold' : 'mt-6'; messageBox.className = `${baseClass} ${ type === 'error' ? 'message-error' : type === 'pass' ? 'message-pass' : type === 'fail' ? 'message-fail' : 'message-info' }`; messageBoxIcon.className = `fas ${ type === 'error' ? 'fa-exclamation-circle' : type === 'pass' ? 'fa-check-circle' : type === 'fail' ? 'fa-times-circle' : 'fa-info-circle' }`; }
         function updateValidationUI(status, message = "") { let iconClass = 'fas fa-comment-dots'; let textContent = message || 'ನಿಮ್ಮ ಸರದಿ'; let elementClass = 'mt-4 validation-default'; switch (status) { case 'correct': elementClass = 'mt-4 validation-correct'; iconClass = 'fas fa-check-circle fa-beat'; textContent = "ಸರಿ!"; break; case 'incorrect': elementClass = 'mt-4 validation-incorrect'; iconClass = 'fas fa-times-circle fa-shake'; textContent = "ತಪ್ಪು! ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ"; break; case 'listening': elementClass = 'mt-4 validation-listening'; iconClass = 'fas fa-microphone-alt fa-beat-fade'; textContent = "ಕೇಳಿಸಲಾಗುತ್ತಿದೆ..."; break; case 'processing': elementClass = 'mt-4 validation-listening'; iconClass = 'fas fa-spinner fa-spin'; textContent = "ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ..."; break; } recognizedTextElement.className = elementClass; recognizedTextIcon.className = iconClass; recognizedTextSpan.textContent = textContent; }
         function resetValidationUI() { updateValidationUI('default', 'ನಿಮ್ಮ ಸರದಿ'); }
+
         function initializeSpeechRecognition() { window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; if (!window.SpeechRecognition) { showMessage("ಕ್ಷಮಿಸಿ, ಧ್ವನಿ ಗುರುತಿಸುವಿಕೆ ಬೆಂಬಲಿಸುವುದಿಲ್ಲ.", 'error'); recordButton.disabled = true; return false; } recognition = new SpeechRecognition(); recognition.lang = 'kn-IN'; recognition.interimResults = false; recognition.maxAlternatives = 1;
              recognition.onstart = () => { isRecording = true; recordButton.classList.add('recording'); recordButton.innerHTML = `<i class="fas fa-stop-circle"></i> ನಿಲ್ಲಿಸಿ`; updateValidationUI('listening'); };
              recognition.onresult = (event) => {
                  updateValidationUI('processing'); const speechResult = event.results[0][0].transcript.trim(); const confidence = event.results[0][0].confidence; console.log(`Recognition: "${speechResult}" (Confidence: ${confidence.toFixed(2)})`); const currentTargetText = activeContent[currentContentIndex].text; const currentLessonTitle = activeContent[currentContentIndex].lessonTitle; const normalize = (str) => str.replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
                  if (normalize(speechResult) === normalize(currentTargetText)) {
-                     if (!isCurrentItemCorrect) { if (currentMode === 'learn') { lessonScores[currentLessonTitle].correct++; updateLessonScoreDisplay(); console.log("Updated Learn Scores:", lessonScores); } else { testScore++; console.log("Test Score:", testScore); } }
+                     if (!isCurrentItemCorrect) { if (currentMode === 'learn') { lessonScores[currentLessonTitle].correct++; updateLessonScoreDisplay(); } else { testScore++; } }
                      isCurrentItemCorrect = true; updateValidationUI('correct'); displayArea.classList.add('correct-answer-flash'); setTimeout(() => { displayArea.classList.remove('correct-answer-flash'); }, 800); nextButton.disabled = true; clearTimeout(nextButtonTimer);
-                     // FIX: Clear timer variable *before* calling updateNavButtons in timeout
-                     nextButtonTimer = setTimeout(() => {
-                         nextButtonTimer = null; // Clear timer variable
-                         updateNavButtons(); // Re-evaluate and enable Next button if appropriate
-                         if (currentMode === 'learn') { showMessage("ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'info'); }
-                         else { showMessage("ಸರಿಯಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'pass'); }
-                     }, 800);
-
+                     nextButtonTimer = setTimeout(() => { nextButtonTimer = null; updateNavButtons(); if (currentMode === 'learn') { showMessage("ತುಂಬಾ ಚೆನ್ನಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'info'); } else { showMessage("ಸರಿಯಾಗಿದೆ! 'ಮುಂದಿನದು' ಒತ್ತಿರಿ.", 'pass'); } }, 800);
                  } else {
                      isCurrentItemCorrect = false; updateValidationUI('incorrect');
+                     if (!failedWords.includes(currentTargetText)) { failedWords.push(currentTargetText); } // Add to failed words list
                      if (currentMode === 'learn') { showMessage(`ಕೇಳಿಸಿದ್ದು: "${speechResult}". ಸರಿಯಾದದ್ದು: "${currentTargetText}".`, 'error'); }
                      else { showMessage(`ತಪ್ಪು. ಸರಿಯಾದದ್ದು: "${currentTargetText}"`, 'error'); }
-                     // FIX: Ensure nav buttons are updated if incorrect
                      updateNavButtons();
                  }
+                 saveUserData(); // Save progress after each attempt
                  setTimeout(() => { if(isRecording) stopRecordingVisuals(); }, 100);
              };
              recognition.onspeechend = () => { if (isRecording) { updateValidationUI('processing'); } };
@@ -283,18 +465,107 @@
         async function checkMicPermissionAndStart() { if (typeof navigator.permissions?.query !== 'function') { console.warn("Permissions API not supported."); requestMicPermissionAndStart(); return; } try { const permissionStatus = await navigator.permissions.query({ name: 'microphone' }); micPermissionState = permissionStatus.state; console.log(`Mic permission state: ${micPermissionState}`); if (micPermissionState === 'granted') { startRecognitionEngine(); } else if (micPermissionState === 'prompt') { requestMicPermissionAndStart(); } else { showMessage("ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ.", 'error'); updateValidationUI('default', 'ಮೈಕ್ ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ'); } permissionStatus.onchange = () => { console.log(`Mic permission changed: ${permissionStatus.state}`); micPermissionState = permissionStatus.state; }; } catch (err) { console.error("Error querying permissions:", err); showMessage("ಅನುಮತಿ ಸ್ಥಿತಿ ಪರಿಶೀಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.", 'error'); requestMicPermissionAndStart(); } }
         function stopRecording() { if (recognition && isRecording) { try { recognition.stop(); } catch (e) { console.warn("Error stopping recognition:", e); } } stopRecordingVisuals(); }
         function stopRecordingVisuals() { isRecording = false; recordButton.classList.remove('recording'); recordButton.innerHTML = `<i class="fas fa-microphone-lines"></i> ಹೇಳಿ`; const currentStatus = recognizedTextElement.className; if (currentStatus.includes('validation-listening') || currentStatus.includes('fa-spinner')) { resetValidationUI(); } }
-        function showTestResults() { const totalQuestions = activeContent.length; const score = testScore; const passed = score >= TEST_PASS_THRESHOLD; console.log(`Test finished. Score: ${score}/${totalQuestions}. Passed: ${passed}`); testResultScore.textContent = `ನಿಮ್ಮ ಸ್ಕೋರ್: ${score} / ${totalQuestions}`; testResultStatus.textContent = passed ? "ಉತ್ತೀರ್ಣ! (Passed!) 🎉" : "ಅನುತ್ತೀರ್ಣ (Failed)"; testResultStatus.className = `text-3xl font-bold mb-6 ${passed ? 'text-green-600' : 'text-red-600'}`; appContainer.classList.add('hidden'); testResultsArea.classList.remove('hidden'); showMessage(`ಪರೀಕ್ಷೆ ಮುಗಿದಿದೆ. ನಿಮ್ಮ ಸ್ಕೋರ್: ${score}/${totalQuestions}.`, passed ? 'pass' : 'fail'); }
-        function restartApp() { currentContentIndex = 0; activeContent = []; testScore = 0; hintCounter = 0; isCurrentItemCorrect = false; currentLessonIndexForTest = -1; clearTimeout(nextButtonTimer); nextButtonTimer = null; appContainer.classList.add('hidden'); testResultsArea.classList.add('hidden'); testSelectionArea.classList.add('hidden'); currentMode = 'learn'; menuLearnLink.classList.add('active'); menuTestLink.classList.remove('active'); initializeLearnMode(); progressBar.style.width = `0%`; progressBarContainer.title = `ನಿಮ್ಮ ಪ್ರಗತಿ: 0 / 0`; hintCountSpan.textContent = '0'; lessonScoreElement.textContent = ""; resetValidationUI(); showMessage("ದಯವಿಟ್ಟು ಮೋಡ್ ಆಯ್ಕೆಮಾಡಿ.", 'info'); }
+
+        function showTestResults() { const totalQuestions = activeContent.length; const score = testScore; const passed = score >= TEST_PASS_THRESHOLD; console.log(`Test finished. Score: ${score}/${totalQuestions}. Passed: ${passed}`); testResultScore.textContent = `ನಿಮ್ಮ ಸ್ಕೋರ್: ${score} / ${totalQuestions}`; testResultStatus.textContent = passed ? "ಉತ್ತೀರ್ಣ! (Passed!) 🎉" : "ಅನುತ್ತೀರ್ಣ (Failed)"; testResultStatus.className = `text-3xl font-bold mb-6 ${passed ? 'text-green-600' : 'text-red-600'}`; appContainer.classList.add('hidden'); testResultsArea.classList.remove('hidden'); showMessage(`ಪರೀಕ್ಷೆ ಮುಗಿದಿದೆ. ನಿಮ್ಮ ಸ್ಕೋರ್: ${score}/${totalQuestions}.`, passed ? 'pass' : 'fail'); saveUserData(); }
+        function displayFailedWords() {
+            failedWordsList.innerHTML = ''; // Clear previous list
+            if (failedWords.length === 0) {
+                noFailedWordsMsg.classList.remove('hidden');
+            } else {
+                noFailedWordsMsg.classList.add('hidden');
+                const uniqueFailedWords = [...new Set(failedWords)]; // Show unique words
+                uniqueFailedWords.forEach(word => {
+                    const li = document.createElement('li');
+                    li.textContent = word;
+                    failedWordsList.appendChild(li);
+                });
+            }
+        }
+        function restartAppToNameInput() { // Renamed for clarity
+            clearCurrentUser(); // Clear user from localStorage
+            // Hide all sections and show name input
+            nameInputContainer.classList.remove('hidden');
+            menuButton.classList.add('hidden');
+            menuPanel.classList.remove('open');
+            appContainer.classList.add('hidden');
+            testSelectionArea.classList.add('hidden');
+            testResultsArea.classList.add('hidden');
+            failedWordsContainer.classList.add('hidden');
+            nameInput.value = "";
+            nameInput.focus();
+            // Reset internal states for a fresh start when a new name is submitted
+            currentContentIndex = 0; activeContent = []; testScore = 0; hintCounter = 0; isCurrentItemCorrect = false; currentLessonIndexForTest = -1; lessonScores = {}; failedWords = [];
+            progressBar.style.width = `0%`; progressBarContainer.title = `ನಿಮ್ಮ ಪ್ರಗತಿ: 0 / 0`; hintCountSpan.textContent = '0'; lessonScoreElement.textContent = ""; resetValidationUI();
+            showMessage("ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.", 'info');
+        }
+
 
         // --- Event Listeners Setup ---
-        prevButton.addEventListener('click', () => { if (currentMode === 'learn' && currentContentIndex > 0) { currentContentIndex--; if (synth.speaking) synth.cancel(); if (isRecording) stopRecording(); updateDisplay(); } });
-        nextButton.addEventListener('click', () => { if (!nextButton.disabled) { if (currentContentIndex < activeContent.length - 1) { currentContentIndex++; if (synth.speaking) synth.cancel(); if (isRecording) stopRecording(); updateDisplay(); } else { if (currentMode === 'test') { showTestResults(); } else { showMessage("ಅಭಿನಂದನೆಗಳು! ನೀವು ಎಲ್ಲಾ ಪಾಠಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ!", 'pass'); displayArea.textContent = "🎉"; progressBar.style.backgroundColor = '#10b981'; } } } });
-        speakButton.addEventListener('click', () => { if (isRecording) stopRecording(); const textToSpeak = activeContent[currentContentIndex]?.text; if (textToSpeak) { if (!currentItemHintUsed) { hintCounter++; hintCountSpan.textContent = hintCounter; const currentLessonTitle = activeContent[currentContentIndex].lessonTitle; if(lessonScores[currentLessonTitle]) { lessonScores[currentLessonTitle].hints++; } currentItemHintUsed = true; } speakText(textToSpeak); } });
+        prevButton.addEventListener('click', () => { if (currentMode === 'learn' && currentContentIndex > 0) { currentContentIndex--; if (synth.speaking) synth.cancel(); if (isRecording) stopRecording(); updateDisplay(); saveUserData(); } });
+        nextButton.addEventListener('click', () => { if (!nextButton.disabled) { if (currentContentIndex < activeContent.length - 1 && !(currentMode === 'test' && currentContentIndex >= TEST_SIZE -1) ) { currentContentIndex++; if (synth.speaking) synth.cancel(); if (isRecording) stopRecording(); updateDisplay(); saveUserData(); } else { if (currentMode === 'test') { showTestResults(); } else { showMessage("ಅಭಿನಂದನೆಗಳು! ನೀವು ಎಲ್ಲಾ ಪಾಠಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ!", 'pass'); displayArea.textContent = "🎉"; progressBar.style.backgroundColor = '#10b981'; } } } });
+        speakButton.addEventListener('click', () => { if (isRecording) stopRecording(); const textToSpeak = activeContent[currentContentIndex]?.text; if (textToSpeak) { if (!currentItemHintUsed) { hintCounter++; hintCountSpan.textContent = hintCounter; const currentLessonTitle = activeContent[currentContentIndex].lessonTitle; if(lessonScores[currentLessonTitle]) { lessonScores[currentLessonTitle].hints++; } currentItemHintUsed = true; saveUserData(); } speakText(textToSpeak); } });
         recordButton.addEventListener('click', () => { if (isRecording) { stopRecording(); } else { resetValidationUI(); if (synth.speaking) { synth.cancel(); } checkMicPermissionAndStart(); } });
 
         // --- Application Initialization ---
-        function initializeApp() { console.log("Initializing App..."); appContainer.classList.add('hidden'); testResultsArea.classList.add('hidden'); testSelectionArea.classList.add('hidden'); menuPanel.classList.remove('open'); if(initializeSpeechRecognition()) { console.log("Speech Recognition Initialized."); setMode('learn'); } else { console.error("Speech recognition could not be initialized."); showMessage("ಧ್ವನಿ ಗುರುತಿಸುವಿಕೆ ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಪರೀಕ್ಷಾ ಮೋಡ್ ಲಭ್ಯವಿಲ್ಲದಿರಬಹುದು.", 'error'); menuTestLink.style.pointerEvents = 'none'; menuTestLink.style.opacity = '0.5'; setMode('learn'); } }
-        if (speechSynthesis.onvoiceschanged !== undefined) { speechSynthesis.onvoiceschanged = initializeApp; if (speechSynthesis.getVoices().length > 0) { setTimeout(initializeApp, 50); } else { console.log("Waiting for voiceschanged event..."); } } else { console.warn("onvoiceschanged not supported. Using timeout."); setTimeout(initializeApp, 500); }
+        function initializeAppLogic() { // Called after name is submitted or loaded
+            console.log("Initializing App Logic for user:", currentUserName);
+            const savedData = loadUserData();
+            if (savedData) {
+                console.log("Loading saved data:", savedData);
+                currentMode = savedData.currentMode || 'learn';
+                currentContentIndex = savedData.currentContentIndex || 0;
+                lessonScores = savedData.lessonScores || {};
+                hintCounter = savedData.hintCounter || 0;
+                failedWords = savedData.failedWords || [];
+                currentLessonIndexForTest = savedData.currentLessonIndexForTest || -1;
+                // Test score is not persisted to restart tests fresh, or could be added if resume is desired
+            } else {
+                // Initialize fresh for new user
+                currentMode = 'learn'; currentContentIndex = 0; lessonScores = {}; hintCounter = 0; failedWords = []; currentLessonIndexForTest = -1;
+            }
+            hintCountSpan.textContent = hintCounter;
+
+            menuPanel.classList.remove('open');
+            if(initializeSpeechRecognition()) {
+                console.log("Speech Recognition Initialized.");
+                setMode(currentMode); // This will also call prepareCourseContent and updateDisplay
+            } else {
+                console.error("Speech recognition could not be initialized.");
+                showMessage("ಧ್ವನಿ ಗುರುತಿಸುವಿಕೆ ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಪರೀಕ್ಷಾ ಮೋಡ್ ಲಭ್ಯವಿಲ್ಲದಿರಬಹುದು.", 'error');
+                menuTestLink.style.pointerEvents = 'none'; menuTestLink.style.opacity = '0.5';
+                setMode('learn'); // Default to learn mode if speech fails
+            }
+        }
+
+        // Initial Page Load Logic
+        window.onload = () => {
+            currentUserName = localStorage.getItem('kannadaLearnerApp_lastUser');
+            if (currentUserName) {
+                nameInputContainer.classList.add('hidden');
+                menuButton.classList.remove('hidden');
+                initializeAppLogic();
+            } else {
+                // Show name input, hide app
+                nameInputContainer.classList.remove('hidden');
+                menuButton.classList.add('hidden');
+                appContainer.classList.add('hidden');
+                testSelectionArea.classList.add('hidden');
+                testResultsArea.classList.add('hidden');
+                failedWordsContainer.classList.add('hidden');
+            }
+            // Ensure voices are loaded for TTS, this is a common pattern
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = () => {
+                    console.log("Voices loaded via onvoiceschanged event.");
+                    // If app logic hasn't run yet (e.g. waiting for name), this is fine.
+                    // If it has, TTS will retry if voices weren't ready.
+                };
+            }
+             // Trigger loading voices if not already done
+            if(speechSynthesis.getVoices().length === 0) {
+                speechSynthesis.getVoices();
+            }
+        };
 
     </script>
 
